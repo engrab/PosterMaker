@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/colorback"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/ss"
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textSize="20sp"
+            android:typeface="serif"
+            android:textColor="@android:color/white"
+            android:id="@+id/txtapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:text="@string/error"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/kk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/ss">
+
+        <TextView
+            android:textSize="17dp"
+            android:textColor="@android:color/black"
+            android:id="@+id/txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/template_error" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/kk"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:textSize="18sp"
+            android:typeface="serif"
+            android:textColor="@color/white"
+            android:id="@+id/btn_ok"
+            android:background="@color/colormediam"
+            android:padding="5dp"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/no"
+            android:layout_weight="1" />
+
+        <Button
+            android:textSize="18sp"
+            android:typeface="serif"
+            android:textColor="@color/white"
+            android:id="@+id/btn_conti"
+            android:background="@color/colormediam"
+            android:padding="5dp"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/txt_conti"
+            android:layout_weight="1" />
+    </LinearLayout>
+</RelativeLayout>

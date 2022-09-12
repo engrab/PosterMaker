@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.msl.demo.view.SquareFrameLayoutGrid xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:background="@drawable/sticker_border"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
+
+    <com.msl.demo.view.SquareImageViewGrid
+        android:layout_gravity="center"
+        android:id="@+id/thumbnail_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp" />
+
+    <ImageView
+        android:id="@+id/download"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
+</com.msl.demo.view.SquareFrameLayoutGrid>
