@@ -276,7 +276,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
                 return;
             }
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
             if (file.exists()) {
                 if (file.listFiles().length >= 7) {
                     new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
@@ -356,12 +356,12 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                         posterActivity = PosterActivity.this;
                         posterActivity.sizeFull++;
                     } else {
-                        File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+                        File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
                         if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
                             Log.d("", "Can't create directory to save image.");
                             Toast.makeText(PosterActivity.this, PosterActivity.this.getResources().getString(R.string.create_dir_err), Toast.LENGTH_SHORT).show();
                             return;
-                        } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1").exists()) {
+                        } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1").exists()) {
                            File file1 = new File(stkr_path);
                             if (file1.exists()) {
                                 riv = new ResizableStickerView(PosterActivity.this);
@@ -820,9 +820,9 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 } else {
                     this.frame_Name = "b" + String.valueOf(i);
                 }
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
                 if (file.exists() || file.mkdirs()) {
-                    File file2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+                    File file2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
                     if (file2.exists()) {
                     }
                     if (crted.equals("nonCreated")) {
@@ -1927,7 +1927,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/Poster Maker");
+                    File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/"+getString(R.string.app_name));
                     if (pictureFileDir.exists() || pictureFileDir.mkdirs()) {
                         String photoFile = "Photo_" + System.currentTimeMillis();
                         if (inPNG) {
@@ -2683,6 +2683,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             });
             dialog.show();
         }
+        super.onBackPressed();
     }
 
     public void ongetSticker() {
@@ -2752,9 +2753,9 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 PosterActivity.this.logo_ll.setDrawingCacheEnabled(false);
                 PosterActivity.this.logo_ll.setVisibility(View.INVISIBLE);
                 PosterActivity.withoutWatermark = PosterActivity.this.bitmap;
-                if (!(PosterActivity.this.preferences.getBoolean("isAdsDisabled", false) || PosterActivity.this.preferences.getBoolean("removeWatermark", false))) {
-                    PosterActivity.this.bitmap = ImageUtils.mergelogo(PosterActivity.this.bitmap, logo);
-                }
+//                if (!(PosterActivity.this.preferences.getBoolean("isAdsDisabled", false) || PosterActivity.this.preferences.getBoolean("removeWatermark", false))) {
+//                    PosterActivity.this.bitmap = ImageUtils.mergelogo(PosterActivity.this.bitmap, logo);
+//                }
                 PosterActivity.this.saveBitmap(true);
                 dialog.dismiss();
             }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+    <resources>
+    <string name="app_name">Poster Maker</string>
     <string name="DesignOptionsInstruction">Long Press on your Design for Options.</string>
     <string name="NoDesigns">No Design\'s saved. Check out \'Free Designs\' Or \'Create Poster\' and save as Design.</string>
     <string name="SavedAs">Save As</string>
@@ -40,7 +41,6 @@
     <string name="add_sticker">Stickers</string>
     <string name="add_text">Text</string>
     <string name="alert">unsaved work</string>
-    <string name="app_name">Poster Maker</string>
     <string name="app_not_found">Application not found!!!</string>
     <string name="appbar_scrolling_view_behavior">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="bck_image">Back Photo</string>

@@ -221,7 +221,7 @@ public class Constants {
     }
 
     public static File getSaveFileLocation(String folderName) {
-        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/" + folderName);
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Poster Maker/.Poster Maker Stickers/" + folderName);
     }
 
     public static boolean saveBitmapObject(Activity activity, Bitmap btmSimple, String pathIs) {
@@ -247,7 +247,7 @@ public class Constants {
 
     public static String saveBitmapObject1(Bitmap bitmap) {
         String temp_path = "";
-        File myDir = getSaveFileLocation("category1");
+        File myDir = getSaveFileLocation("category1" );
         myDir.mkdirs();
         File file1 = new File(myDir, "raw1-" + System.currentTimeMillis() + ".png");
         temp_path = file1.getAbsolutePath();
@@ -267,7 +267,7 @@ public class Constants {
     }
 
     public static String saveBitmapObject(Activity activity, Bitmap bitmap) {
-        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/PosterMaker");
+        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/"+activity.getString(R.string.app_name)+"/Design");
         myDir.mkdirs();
         long n = System.currentTimeMillis();
         File file = new File(myDir, "raw-" + n + ".ser");

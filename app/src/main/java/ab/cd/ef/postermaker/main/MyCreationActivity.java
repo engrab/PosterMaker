@@ -78,7 +78,7 @@ public class MyCreationActivity extends Activity {
     }
     private void fetchImage() {
         IMAGEALLARY.clear();
-        listAllImages(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Poster Maker"));
+        listAllImages(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/"+getString(R.string.app_name)));
     }
 
     @TargetApi(23)

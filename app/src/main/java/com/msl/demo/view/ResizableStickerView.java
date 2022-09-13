@@ -696,7 +696,7 @@ public class ResizableStickerView extends RelativeLayout implements TouchCallbac
 
     private String saveBitmapObject1(Bitmap bitmap) {
         String temp_path = "";
-        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+        File myDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Post Maker/.Poster Maker Stickers/category1");
         myDir.mkdirs();
         File file1 = new File(myDir, "raw1-" + System.currentTimeMillis() + ".png");
         temp_path = file1.getAbsolutePath();

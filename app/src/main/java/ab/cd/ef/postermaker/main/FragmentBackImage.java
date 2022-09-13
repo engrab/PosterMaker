@@ -126,7 +126,7 @@ public class FragmentBackImage extends Fragment {
     }
 
     public void getFromSdcard() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
         if (file.exists()) {
             int count_stkr = file.listFiles().length;
             thumbnails.clear();

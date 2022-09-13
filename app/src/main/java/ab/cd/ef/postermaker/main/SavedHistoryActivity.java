@@ -161,7 +161,7 @@ public class SavedHistoryActivity extends Activity {
     }
 
     public void getFromSdcard() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Poster Maker");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/"+getString(R.string.app_name));
         if (file.isDirectory()) {
             int i;
             listFile = file.listFiles();

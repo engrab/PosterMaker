@@ -147,10 +147,10 @@ public class MainActivity extends Activity implements OnClickListener {
         protected void onPostExecute(Boolean isDownloaded) {
             super.onPostExecute(isDownloaded);
             if (isDownloaded.booleanValue()) {
-                if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
+                if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
                     MainActivity.this.init("yes");
                 }
-            } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
+            } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
                 MainActivity.this.init("yes");
             }
         }
@@ -215,7 +215,7 @@ public class MainActivity extends Activity implements OnClickListener {
             this.stkrNameList.add("bh" + k);
         }
         if (VERSION.SDK_INT < 23 || (checkSelfPermission("android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED)) {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
             File[] files = file.listFiles();
             if (!file.exists()) {
                 downloadStickers();
@@ -243,6 +243,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private void ViewTextAnimation() {
 
         progressDialog.setMessage("Loading Data");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         Handler handler = this.handler;
         Runnable running_thread = new running_thread();
@@ -374,7 +375,7 @@ public class MainActivity extends Activity implements OnClickListener {
             File[] files;
             if (grantResults[0] == 0) {
                 if (VERSION.SDK_INT < 23 || (checkSelfPermission("android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED)) {
-                    file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+                    file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
                     files = file.listFiles();
                     if (!file.exists()) {
                         downloadStickers();
@@ -395,7 +396,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 this.isOpenFisrtTime = true;
                 permissionDialog();
             } else if (VERSION.SDK_INT < 23 || (checkSelfPermission("android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED)) {
-                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
                 files = file.listFiles();
                 if (!file.exists()) {
                     downloadStickers();
@@ -423,15 +424,15 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void downloadStickers() {
         try {
-            File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+            File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
             if (pictureFileDir.exists() || pictureFileDir.mkdirs()) {
                 File rootFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-                File file = new File(rootFolder, ".Poster Maker Stickers/category1");
+                File file = new File(rootFolder, getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
                 File[] files = pictureFileDir.listFiles();
                 int i;
                 if (file.exists()) {
                     for (i = 0; i < this.stkrNameList.size(); i++) {
-                        if (!new File(rootFolder, ".Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
+                        if (!new File(rootFolder, getString(R.string.app_name)+"/.Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
                             new SaveStickersAsync().execute(this.stkrNameList.get(i), "" + i);
                         } else if (files.length >= this.stkrNameList.size()) {
                             HideTextAnimation();
@@ -440,7 +441,7 @@ public class MainActivity extends Activity implements OnClickListener {
                     return;
                 }
                 for (i = 0; i < this.stkrNameList.size(); i++) {
-                    if (!new File(rootFolder, ".Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
+                    if (!new File(rootFolder, getString(R.string.app_name)+"/.Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
                         new SaveStickersAsync().execute(this.stkrNameList.get(i), "" + i);
                     } else if (files.length >= this.stkrNameList.size()) {
                         HideTextAnimation();
@@ -494,7 +495,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "DECEMBER 20, 2020 SOUTHTOWN MALL, CITY", "ffont14.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(240.0f), Constants.getNewY(849.0f), Constants.getNewWidth(597.0f), Constants.getNewHeight(157.0f), 0.0f, "TEXT", 5, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "CHECK IT TWICE", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(162.0f), Constants.getNewY(370.0f), Constants.getNewWidth(759.0f), Constants.getNewHeight(81.0f), 0.0f, "TEXT", 9, 0, 0, 0, 0, 0, "", "", ""));
         templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_7", "", "1:1", "Color", "90", "FREESTYLE", "", "ffffe4b4", "", 80, 0));
-        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(77.0f), Constants.getNewY(68.0f), Constants.getNewWidth(925.0f), Constants.getNewHeight(557.0f), 0.0f, 0.0f, "", "STICKER", 2, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/.Poster Maker Stickers/category1/bh5.png", "colored", 4, 0, "", "", "", null, null));
+        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(77.0f), Constants.getNewY(68.0f), Constants.getNewWidth(925.0f), Constants.getNewHeight(557.0f), 0.0f, 0.0f, "", "STICKER", 2, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh5.png", "colored", 4, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(151.99493f), Constants.getNewY(484.005f), Constants.getNewWidth(763.0f), Constants.getNewHeight(629.0f), 0.0f, 0.0f, "e_3", "STICKER", 3, 0, 100, 0, 0, 0, 0, "", "colored", 78, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(72.646515f), Constants.getNewY(-173.99994f), Constants.getNewWidth(933.0f), Constants.getNewHeight(1039.0f), -90.0f, 0.0f, "sh14", "STICKER", 5, -7773943, 100, 0, 0, 0, 0, "", "white", 100, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(83.99982f), Constants.getNewY(-155.88539f), Constants.getNewWidth(911.0f), Constants.getNewHeight(1003.0f), -90.0f, 0.0f, "sh14", "STICKER", 7, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "", "", "", null, null));
@@ -542,21 +543,21 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "ELVIS | CHRIS SHINN", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 14, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(347.5f), Constants.getNewY(784.0f), Constants.getNewWidth(379.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 13, 0, 0, 0, 0, 0, "", "", ""));
         templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_16", "", "1:1", "Color", "90", "FREESTYLE", "", "ffffffff", "", 80, 0));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(159.0f), Constants.getNewY(446.5f), Constants.getNewWidth(755.0f), Constants.getNewHeight(687.0f), 0.0f, 0.0f, "e_3", "STICKER", 1, 0, 100, 0, 0, 0, 0, "", "colored", 92, 0, "", "", "", null, null));
-        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(225.5f), Constants.getNewY(20.0f), Constants.getNewWidth(641.0f), Constants.getNewHeight(639.0f), 0.0f, 0.0f, "", "STICKER", 5, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/.Poster Maker Stickers/category1/bh4.png", "colored", 1, 0, "", "", "", null, null));
+        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(225.5f), Constants.getNewY(20.0f), Constants.getNewWidth(641.0f), Constants.getNewHeight(639.0f), 0.0f, 0.0f, "", "STICKER", 5, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh4.png", "colored", 1, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(206.91235f), Constants.getNewY(-7.0f), Constants.getNewWidth(679.0f), Constants.getNewHeight(695.0f), 0.0f, 0.0f, "sh11", "STICKER", 6, -12103933, 100, 0, 0, 0, 0, "", "white", 95, 0, "", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "M I S S I N G", "ffont18.otf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(386.0f), Constants.getNewY(669.0f), Constants.getNewWidth(303.0f), Constants.getNewHeight(85.0f), 0.0f, "TEXT", 0, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "REWARD 200 $", "ffont6.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(235.5f), Constants.getNewY(765.0f), Constants.getNewWidth(605.0f), Constants.getNewHeight(89.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "Last seen at 12th cor. 20th sts. City", "ffont18.otf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(210.0f), Constants.getNewY(876.0f), Constants.getNewWidth(655.0f), Constants.getNewHeight(115.0f), 0.0f, "TEXT", 3, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "Please Call Alex At (123) 456 789 For Any Leads.", "ffont18.otf", -11841534, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(48.0f), Constants.getNewY(991.0f), Constants.getNewWidth(981.0f), Constants.getNewHeight(81.0f), 0.0f, "TEXT", 4, 0, 0, 0, 0, 0, "", "", ""));
         templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_17", "b45", "1:1", "Background", "90", "FREESTYLE", "", "", "", 80, 255));
-        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(49.27881f), Constants.getNewY(2.0f), Constants.getNewWidth(983.0f), Constants.getNewHeight(635.0f), 0.0f, 0.0f, "", "STICKER", 4, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/.Poster Maker Stickers/category1/bh1.png", "colored", 1, 0, "-137,35", "", "", null, null));
+        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(49.27881f), Constants.getNewY(2.0f), Constants.getNewWidth(983.0f), Constants.getNewHeight(635.0f), 0.0f, 0.0f, "", "STICKER", 4, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh1.png", "colored", 1, 0, "-137,35", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(31.5f), Constants.getNewY(-230.73828f), Constants.getNewWidth(1019.0f), Constants.getNewHeight(1101.0f), -90.0f, 0.0f, "sh14", "STICKER", 5, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "-326,-367", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "BABY MARIELLA", "font3.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 2, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(265.0f), Constants.getNewY(689.0f), Constants.getNewWidth(553.0f), Constants.getNewHeight(195.0f), 0.0f, "TEXT", 0, 0, 0, 0, 0, 0, "-141,65", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "RSVP TO JENNIFER AT (123) 456 789", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 2, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(235.0f), Constants.getNewY(1005.0f), Constants.getNewWidth(617.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 1, 0, 0, 0, 0, 0, "-462,23", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "1ST BIRTHDAY", "ffont4.ttf", -13421773, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(499.28082f), Constants.getNewY(803.7013f), Constants.getNewWidth(339.0f), Constants.getNewHeight(89.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "932,18", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "April 20, 2020 • 3 pm Your Place 1234 Street, Town, Country", "ffont10.ttf", -13421773, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(260.5f), Constants.getNewY(913.0f), Constants.getNewWidth(557.0f), Constants.getNewHeight(99.0f), 0.0f, "TEXT", 3, 0, 0, 0, 0, 0, "-162,13", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "You are cordially invited to", "ffont4.ttf", -13421773, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(324.45563f), Constants.getNewY(626.03394f), Constants.getNewWidth(443.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 6, 0, 0, 0, 0, 0, "41,223", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_20", "b7", "1:1", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/.Poster Maker Stickers/category1/bh6.png", "", "", 80, 0));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_20", "b7", "1:1", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh6.png", "", "", 80, 0));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(-121.46063f), Constants.getNewY(0.62127686f), Constants.getNewWidth(675.0f), Constants.getNewHeight(481.0f), 0.0f, 0.0f, "b_19", "STICKER", 0, 0, 100, 0, 0, 0, 0, "", "colored", 1, 0, "", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "SHOP NOW", "ffont6.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 20, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(301.0f), Constants.getNewY(796.0f), Constants.getNewWidth(493.0f), Constants.getNewHeight(115.0f), 0.0f, "TEXT", 1, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "Address, Street, Town/City, Country", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 176, Constants.getNewX(0.0f), Constants.getNewY(917.5f), Constants.getNewWidth(1085.0f), Constants.getNewHeight(81.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "", "", ""));
@@ -582,7 +583,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "FREE ENTRY AND PARKING  |  PARTY STARTS AT 7 PM SILOCO BEACH PARTY, SINGAPORE", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(68.5f), Constants.getNewY(1289.4852f), Constants.getNewWidth(935.0f), Constants.getNewHeight(93.0f), 0.0f, "TEXT", 5, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "F E A T U R I N G", "ffont48.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(379.5f), Constants.getNewY(1135.0f), Constants.getNewWidth(317.0f), Constants.getNewHeight(101.0f), 0.0f, "TEXT", 6, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "WWW.SILOEVENTS.COM", "ffont14.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(339.75427f), Constants.getNewY(1367.0f), Constants.getNewWidth(403.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 7, 0, 0, 0, 0, 0, "", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_2", "b9", "3:4", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/.Poster Maker Stickers/category1/bh3.png", "", "o1", 118, 255));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_2", "b9", "3:4", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh3.png", "", "o1", 118, 255));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(51.49997f), Constants.getNewY(-185.0f), Constants.getNewWidth(977.0f), Constants.getNewHeight(1079.0f), -90.0f, 0.0f, "sh14", "STICKER", 4, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(244.0f), Constants.getNewY(3.0f), Constants.getNewWidth(297.0f), Constants.getNewHeight(245.0f), 0.0f, 0.0f, "g_15", "STICKER", 5, 0, 100, 0, 0, 0, 0, "", "colored", 1, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(537.0f), Constants.getNewY(6.0f), Constants.getNewWidth(297.0f), Constants.getNewHeight(245.0f), 0.0f, -180.0f, "g_15", "STICKER", 6, 0, 100, 0, 0, 0, 0, "", "colored", 1, 0, "", "", "", null, null));
@@ -744,7 +745,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "OFF", "ffont10.ttf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", 0, 0, Constants.getNewX(667.0f), Constants.getNewY(455.0f), Constants.getNewWidth(123.0f), Constants.getNewHeight(127.0f), 0.0f, "TEXT", 7, 0, 0, 0, 0, 0, "201,199", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "%", "ffont25.ttf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", 0, 0, Constants.getNewX(651.0f), Constants.getNewY(280.0f), Constants.getNewWidth(153.0f), Constants.getNewHeight(249.0f), 0.0f, "TEXT", 8, 0, 0, 0, 0, 0, "186,138", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "SHOP NAME", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", -1, 0, Constants.getNewX(397.0f), Constants.getNewY(129.0f), Constants.getNewWidth(293.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 9, 0, 0, 0, 0, 0, "116,223", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_22", "b6", "1:1", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/.Poster Maker Stickers/category1/bh7.png", "", "", 80, 0));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_22", "b6", "1:1", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh7.png", "", "", 80, 0));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(33.812683f), Constants.getNewY(375.5f), Constants.getNewWidth(417.0f), Constants.getNewHeight(247.0f), 0.0f, 0.0f, "sh1", "STICKER", 0, -4464, 100, 0, 0, 0, 0, "", "white", 1, 0, "-25,60", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "Get up to 50% off", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(147.0f), Constants.getNewY(380.5f), Constants.getNewWidth(191.0f), Constants.getNewHeight(237.0f), 0.0f, "TEXT", 1, 0, 0, 0, 0, 0, "167,144", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "My Beauty Salon", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(66.0f), Constants.getNewY(670.0f), Constants.getNewWidth(351.0f), Constants.getNewHeight(183.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "87,171", "", ""));
@@ -875,7 +876,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "GET IN STORE EARLY THURSDAY FOR A COUPON GIVEAWAY!", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(58.0f), Constants.getNewY(1245.0f), Constants.getNewWidth(965.0f), Constants.getNewHeight(143.0f), 0.0f, "TEXT", 9, 0, 0, 0, 0, 0, "-220,191", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "THURSDAY", "", -65485, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(277.2207f), Constants.getNewY(1069.0f), Constants.getNewWidth(525.0f), Constants.getNewHeight(137.0f), 0.0f, "TEXT", 10, 0, 0, 0, 0, 0, "0,194", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "3PM", "", -65485, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(299.0f), Constants.getNewY(865.0f), Constants.getNewWidth(483.0f), Constants.getNewHeight(257.0f), 0.0f, "TEXT", 11, 0, 0, 0, 0, 0, "21,134", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_11", "b11", "3:4", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/.Poster Maker Stickers/category1/bh2.png", "", "", 80, 172));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_11", "b11", "3:4", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh2.png", "", "", 80, 172));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(56.00006f), Constants.getNewY(194.00006f), Constants.getNewWidth(961.0f), Constants.getNewHeight(935.0f), -90.0f, 0.0f, "sh34", "STICKER", 0, ViewCompat.MEASURED_STATE_MASK, 67, 0, 0, 0, 0, "", "white", 1, 0, "-297,-284", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(-8.499939f), Constants.getNewY(183.0f), Constants.getNewWidth(1097.0f), Constants.getNewHeight(959.0f), -90.0f, 0.0f, "sh14", "STICKER", 1, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "-365,-296", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(9.00001f), Constants.getNewY(25.000006f), Constants.getNewWidth(367.0f), Constants.getNewHeight(367.0f), -25.268269f, 0.0f, "b_21", "STICKER", 7, 0, 100, 0, 0, 0, 0, "", "colored", 17, 0, "0,0", "", "", null, null));

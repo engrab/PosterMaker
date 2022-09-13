@@ -88,7 +88,7 @@ public class StickersFragment extends Fragment {
         protected void onPostExecute(Boolean isDownloaded) {
             super.onPostExecute(isDownloaded);
             if (isDownloaded.booleanValue()) {
-                File[] files = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1").listFiles();
+                File[] files = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Post Maker/.Poster Maker Stickers/category1").listFiles();
                 if (files.length >= StickersFragment.this.stkrNameList.size()) {
                     Toast.makeText(StickersFragment.this.getActivity(), StickersFragment.this.getResources().getString(R.string.downloaded), Toast.LENGTH_SHORT).show();
                     StickersFragment.this.pdia.dismiss();
@@ -100,7 +100,7 @@ public class StickersFragment extends Fragment {
                     StickersFragment.this.uri.add(files[i].getAbsolutePath());
                 }
                 StickersFragment.this.grid.setAdapter(new StickerGrid(StickersFragment.this.getActivity(), StickersFragment.this.catName, StickersFragment.this.thumbnails));
-            } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1").listFiles().length >= StickersFragment.this.stkrNameList.size()) {
+            } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Post Maker/.Poster Maker Stickers/category1").listFiles().length >= StickersFragment.this.stkrNameList.size()) {
                 StickersFragment.this.pdia.dismiss();
             }
         }
@@ -140,7 +140,7 @@ public class StickersFragment extends Fragment {
         }
 
         protected Boolean doInBackground(String... params) {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Post Maker/.Poster Maker Stickers/category1");
             if (file.exists()) {
                 File[] listFile = file.listFiles();
                 int count = file.listFiles().length;
@@ -188,7 +188,7 @@ public class StickersFragment extends Fragment {
 
     private void downloadStickers() {
         try {
-            File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
+            File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Post Maker/.Poster Maker Stickers/category1");
             if (pictureFileDir.exists() || pictureFileDir.mkdirs()) {
                 this.size_list = this.stkrNameList.size();
                 this.pdia = new ProgressDialog(getActivity());
@@ -199,7 +199,7 @@ public class StickersFragment extends Fragment {
                 this.pdia.setCancelable(false);
                 this.pdia.show();
                 File rootFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-                File file = new File(rootFolder, ".Poster Maker Stickers/category1");
+                File file = new File(rootFolder, "Post Maker/.Poster Maker Stickers/category1");
                 int i;
                 if (file.exists()) {
                     int count_stkr = file.listFiles().length;
