@@ -41,7 +41,7 @@ public class TemplatesActivity extends FragmentActivity implements MaterialTabLi
         this.isChanged = this.prefs.getBoolean("isChanged", false);
         ((TextView) findViewById(R.id.txt_appname)).setTypeface(this.ttfHeader);
         initUI();
-        ((ImageButton) findViewById(R.id.btn_bck)).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.btn_bck).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 TemplatesActivity.this.onBackPressed();
@@ -51,8 +51,8 @@ public class TemplatesActivity extends FragmentActivity implements MaterialTabLi
     }
 
     private void initUI() {
-        this.tabHost = (MaterialTabHost) findViewById(R.id.tabHost);
-        this.pager = (ViewPager) findViewById(R.id.pager);
+        this.tabHost = findViewById(R.id.tabHost);
+        this.pager = findViewById(R.id.pager);
         this.adapter = new ViewPagerAdapter(this, getSupportFragmentManager());
         this.adapter.notifyDataSetChanged();
         this.pager.setAdapter(this.adapter);

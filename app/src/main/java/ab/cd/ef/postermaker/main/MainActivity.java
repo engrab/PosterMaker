@@ -2,6 +2,7 @@ package ab.cd.ef.postermaker.main;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Environment;
@@ -60,11 +62,11 @@ public class MainActivity extends Activity implements OnClickListener {
     int count = 0;
     AnimationDrawable danim;
     private Editor editor;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     boolean isAppInstalled = false;
     private boolean isDataStored = false;
     private boolean isOpenFisrtTime = false;
-    LinearLayout layView;
+//    LinearLayout layView;
     AdView mAdView;
     SharedPreferences preferences;
     public SharedPreferences prefs;
@@ -72,7 +74,9 @@ public class MainActivity extends Activity implements OnClickListener {
     ArrayList<String> stkrNameList;
     Typeface ttHADER;
     Typeface ttText;
-    TextView txt_load;
+//    TextView txt_load;
+
+    ProgressDialog progressDialog;
 
     class running_thread implements Runnable {
         running_thread() {
@@ -81,16 +85,16 @@ public class MainActivity extends Activity implements OnClickListener {
         public void run() {
             if (MainActivity.this.count == 0) {
                 MainActivity.this.count = 1;
-                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading));
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading));
             } else if (MainActivity.this.count == 1) {
                 MainActivity.this.count = 2;
-                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + ".");
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + ".");
             } else if (MainActivity.this.count == 2) {
                 MainActivity.this.count = 3;
-                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "..");
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "..");
             } else if (MainActivity.this.count == 3) {
                 MainActivity.this.count = 0;
-                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "...");
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "...");
             }
             MainActivity.this.handler.postDelayed(MainActivity.this.runnable, 400);
         }
@@ -111,7 +115,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
         protected void onPostExecute(Boolean isDownloaded) {
             super.onPostExecute(isDownloaded);
-            MainActivity.this.HideTextAnimation();
+            HideTextAnimation();
         }
     }
 
@@ -175,7 +179,9 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LinearLayout adContainer=(LinearLayout) findViewById(R.id.adContainer);
+        progressDialog = new ProgressDialog(this);
+
+        LinearLayout adContainer= findViewById(R.id.adContainer);
 
         this.preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         this.editor = getSharedPreferences("MY_PREFS_NAME", 0).edit();
@@ -194,15 +200,15 @@ public class MainActivity extends Activity implements OnClickListener {
             editor.putBoolean("isAppInstalled", true);
             editor.commit();
         }
-        ((RelativeLayout) findViewById(R.id.lay_poster)).setOnClickListener(this);
-        ((RelativeLayout) findViewById(R.id.lay_template)).setOnClickListener(this);
-        ((RelativeLayout) findViewById(R.id.lay_photos)).setOnClickListener(this);
-        ((RelativeLayout) findViewById(R.id.lay_more)).setOnClickListener(this);
+        findViewById(R.id.lay_poster).setOnClickListener(this);
+        findViewById(R.id.lay_template).setOnClickListener(this);
+        findViewById(R.id.lay_photos).setOnClickListener(this);
+        findViewById(R.id.lay_more).setOnClickListener(this);
         this.danim = (AnimationDrawable) ((ImageView) findViewById(R.id.img_drawable)).getDrawable();
         this.danim.start();
         Typeface ttf = Constants.getHeaderTypeface(this);
-        this.layView = (LinearLayout) findViewById(R.id.layView);
-        this.txt_load = (TextView) findViewById(R.id.txt_load);
+//        this.layView = findViewById(R.id.layView);
+//        this.txt_load = findViewById(R.id.txt_load);
         this.stkrNameList = new ArrayList();
         this.stkrNameList.clear();
         for (int k = 1; k <= 7; k++) {
@@ -216,8 +222,8 @@ public class MainActivity extends Activity implements OnClickListener {
                 ViewTextAnimation();
                 return;
             } else if (files.length >= this.stkrNameList.size()) {
-                this.layView.setVisibility(View.GONE);
-                this.txt_load.setVisibility(View.VISIBLE);
+//                this.layView.setVisibility(View.GONE);
+//                this.txt_load.setVisibility(View.VISIBLE);
                 ViewTextAnimation();
                 init("yes");
                 return;
@@ -226,11 +232,18 @@ public class MainActivity extends Activity implements OnClickListener {
                 ViewTextAnimation();
                 return;
             }
+        }else {
+
+            permissionDialog();
         }
-        permissionDialog();
+
+
     }
 
     private void ViewTextAnimation() {
+
+        progressDialog.setMessage("Loading Data");
+        progressDialog.show();
         Handler handler = this.handler;
         Runnable running_thread = new running_thread();
         this.runnable = running_thread;
@@ -238,9 +251,13 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void HideTextAnimation() {
+
         this.handler.removeCallbacks(this.runnable);
-        this.layView.setVisibility(View.VISIBLE);
-        this.txt_load.setVisibility(View.GONE);
+        if (progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+//        this.layView.setVisibility(View.VISIBLE);
+//        this.txt_load.setVisibility(View.GONE);
     }
 
     protected void onResume() {
@@ -292,7 +309,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dialog.setContentView(R.layout.exit_dialog);
         ((TextView) dialog.findViewById(R.id.txtH)).setTypeface(this.ttHADER);
         ((TextView) dialog.findViewById(R.id.txt_free)).setTypeface(this.ttText);
-        Button btn_ok = (Button) dialog.findViewById(R.id.btn_yes);
+        Button btn_ok = dialog.findViewById(R.id.btn_yes);
         btn_ok.setTypeface(this.ttText, 1);
         btn_ok.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -304,7 +321,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.thank_toast), Toast.LENGTH_SHORT).show();
             }
         });
-        Button btn_conti = (Button) dialog.findViewById(R.id.btn_no);
+        Button btn_conti = dialog.findViewById(R.id.btn_no);
         btn_conti.setTypeface(this.ttText, 1);
         btn_conti.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -326,16 +343,18 @@ public class MainActivity extends Activity implements OnClickListener {
     public void permissionDialog() {
         final Dialog dialog = new Dialog(this, 16974128);
         dialog.setContentView(R.layout.permissionsdialog);
-        dialog.setTitle(getResources().getString(R.string.permission).toString());
+        dialog.setTitle(getResources().getString(R.string.permission));
         dialog.setCancelable(false);
-        ((Button) dialog.findViewById(R.id.ok)).setOnClickListener(new OnClickListener() {
+        dialog.findViewById(R.id.ok).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                MainActivity.this.requestPermissions(new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"}, 100);
+                if (VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{"android.permission.CAMERA", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"}, 100);
+                }
                 dialog.dismiss();
             }
         });
         if (this.isOpenFisrtTime) {
-            Button setting = (Button) dialog.findViewById(R.id.settings);
+            Button setting = dialog.findViewById(R.id.settings);
             setting.setVisibility(View.VISIBLE);
             setting.setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
@@ -363,9 +382,9 @@ public class MainActivity extends Activity implements OnClickListener {
                         return;
                     } else if (files.length >= this.stkrNameList.size()) {
                         ViewTextAnimation();
-                        this.layView.setVisibility(View.GONE);
-                        this.txt_load.setVisibility(View.VISIBLE);
-                        new DummyAsync().execute(new String[]{""});
+//                        this.layView.setVisibility(View.GONE);
+//                        this.txt_load.setVisibility(View.VISIBLE);
+                        new DummyAsync().execute("");
                         return;
                     } else {
                         downloadStickers();
@@ -383,9 +402,9 @@ public class MainActivity extends Activity implements OnClickListener {
                     ViewTextAnimation();
                 } else if (files.length >= this.stkrNameList.size()) {
                     ViewTextAnimation();
-                    this.layView.setVisibility(View.GONE);
-                    this.txt_load.setVisibility(View.VISIBLE);
-                    new DummyAsync().execute(new String[]{""});
+//                    this.layView.setVisibility(View.GONE);
+//                    this.txt_load.setVisibility(View.VISIBLE);
+                    new DummyAsync().execute("");
                 } else {
                     downloadStickers();
                     ViewTextAnimation();
@@ -412,8 +431,8 @@ public class MainActivity extends Activity implements OnClickListener {
                 int i;
                 if (file.exists()) {
                     for (i = 0; i < this.stkrNameList.size(); i++) {
-                        if (!new File(rootFolder, ".Poster Maker Stickers/category1/" + ((String) this.stkrNameList.get(i)) + ".png").exists()) {
-                            new SaveStickersAsync().execute(new String[]{(String) this.stkrNameList.get(i), "" + i});
+                        if (!new File(rootFolder, ".Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
+                            new SaveStickersAsync().execute(this.stkrNameList.get(i), "" + i);
                         } else if (files.length >= this.stkrNameList.size()) {
                             HideTextAnimation();
                         }
@@ -421,8 +440,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     return;
                 }
                 for (i = 0; i < this.stkrNameList.size(); i++) {
-                    if (!new File(rootFolder, ".Poster Maker Stickers/category1/" + ((String) this.stkrNameList.get(i)) + ".png").exists()) {
-                        new SaveStickersAsync().execute(new String[]{(String) this.stkrNameList.get(i), "" + i});
+                    if (!new File(rootFolder, ".Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
+                        new SaveStickersAsync().execute(this.stkrNameList.get(i), "" + i);
                     } else if (files.length >= this.stkrNameList.size()) {
                         HideTextAnimation();
                     }
