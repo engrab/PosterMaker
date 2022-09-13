@@ -293,14 +293,4 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
-    <style name="StickerNoActionBar">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-    </style>
-
-  <style name="TextLibNoActionBar">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-    </style>
-
 </resources>

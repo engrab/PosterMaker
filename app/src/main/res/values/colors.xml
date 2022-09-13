@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="abc_input_method_navigation_guard">@android:color/black</color>
     <color name="abc_search_url_text_normal">#ff7fa87f</color>
     <color name="abc_search_url_text_pressed">@android:color/black</color>
     <color name="abc_search_url_text_selected">@android:color/black</color>
@@ -15,7 +14,6 @@
     <color name="bg_colors">#ff565656</color>
     <color name="black">#ff000000</color>
     <color name="black_transparent">#4b000000</color>
-    <color name="blue">#ff00a7de</color>
     <color name="bright_foreground_disabled_material_dark">#80ffffff</color>
     <color name="bright_foreground_disabled_material_light">#80000000</color>
     <color name="bright_foreground_inverse_material_dark">@color/bright_foreground_material_light</color>
@@ -35,15 +33,11 @@
     <color name="colormediam">#3C6E62</color>
 
     <color name="colorPrimaryDark">#3C6E62</color>
-    <color name="colorTextLibBackground">#ffffffff</color>
-    <color name="colorTextLibBlack">#ff000000</color>
     <color name="colorTextLibSelected">#ffffffff</color>
-    <color name="colorTextLibTheme">#6DB199</color>
     <color name="colorTextLibWhite">#ffffffff</color>
     <color name="colorTheme">#3C6E62</color>
     <color name="colorTrans">#00000000</color>
     <color name="color_background">#ff917f97</color>
-    <color name="color_black">#ff000000</color>
     <color name="color_selected">#ff620b80</color>
     <color name="color_theme">#ffac72bf</color>
     <color name="color_white">#ffffffff</color>
@@ -64,21 +58,14 @@
     <color name="design_fab_stroke_top_inner_color">#1affffff</color>
     <color name="design_fab_stroke_top_outer_color">#2effffff</color>
     <color name="design_snackbar_background_color">#ff323232</color>
-    <color name="design_textinput_error_color_dark">#ffff6e6e</color>
-    <color name="design_textinput_error_color_light">#ffd50000</color>
-    <color name="design_tint_password_toggle">#6DB199</color>
     <color name="dim_foreground_disabled_material_dark">#80bebebe</color>
     <color name="dim_foreground_disabled_material_light">#80323232</color>
     <color name="dim_foreground_material_dark">#ffbebebe</color>
     <color name="dim_foreground_material_light">#ff323232</color>
-    <color name="error_color_material">#f4511e</color>
     <color name="foreground_material_dark">@android:color/white</color>
     <color name="foreground_material_light">@android:color/black</color>
-    <color name="green">#ff498549</color>
     <color name="highlighted_text_material_dark">#6680cbc4</color>
     <color name="highlighted_text_material_light">#66009688</color>
-    <color name="hint_foreground_material_dark">@color/bright_foreground_disabled_material_dark</color>
-    <color name="hint_foreground_material_light">@color/bright_foreground_disabled_material_light</color>
     <color name="material_blue_grey_800">#ff37474f</color>
     <color name="material_blue_grey_900">#ff263238</color>
     <color name="material_blue_grey_950">#ff21272b</color>
@@ -102,9 +89,6 @@
     <color name="primary_text_default_material_light">#de000000</color>
     <color name="primary_text_disabled_material_dark">#4dffffff</color>
     <color name="primary_text_disabled_material_light">#39000000</color>
-    <color name="psts_background_tab_pressed">#1affffff</color>
-    <color name="psts_background_tab_pressed_ripple">#aaffffff</color>
-    <color name="red">#fff50c0c</color>
     <color name="ripple_material_dark">#33ffffff</color>
     <color name="ripple_material_light">#1f000000</color>
     <color name="secondary_text_default_material_dark">#b3ffffff</color>
@@ -118,6 +102,5 @@
     <color name="tooltip_background_dark">#e6616161</color>
     <color name="tooltip_background_light">#e6ffffff</color>
     <color name="white">#ffffffff</color>
-    <color name="yellow">#ffffb400</color>
 
 </resources>
