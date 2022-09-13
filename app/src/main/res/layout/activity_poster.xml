@@ -1590,8 +1590,9 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_margin="10dp"
-        android:layout_toLeftOf="@+id/btn_bck"
         android:background="@drawable/ic_back"
         android:visibility="invisible" />
 

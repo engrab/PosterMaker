@@ -159,7 +159,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     private SeekBar hueSeekbar;
     int[] imageId = new int[]{R.drawable.btxt0, R.drawable.btxt1, R.drawable.btxt2, R.drawable.btxt3, R.drawable.btxt4, R.drawable.btxt5, R.drawable.btxt6, R.drawable.btxt7, R.drawable.btxt8, R.drawable.btxt9, R.drawable.btxt10, R.drawable.btxt11, R.drawable.btxt12, R.drawable.btxt13, R.drawable.btxt14, R.drawable.btxt15, R.drawable.btxt16, R.drawable.btxt17, R.drawable.btxt18, R.drawable.btxt19, R.drawable.btxt20, R.drawable.btxt21, R.drawable.btxt22, R.drawable.btxt23, R.drawable.btxt24};
     Button img_oK;
-    private View[] layArr = new View[5];
+    private final View[] layArr = new View[5];
     RelativeLayout lay_color;
     LinearLayout lay_colorOacity;
     RelativeLayout lay_colorOpacity;
@@ -273,22 +273,22 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             this.background_blur.setImageBitmap(this.btmp);
             PosterActivity.this.txt_stkr_rel.removeAllViews();
             if (PosterActivity.this.temp_path.equals("")) {
-                new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
+                new LordStickersAsync().execute("" + PosterActivity.this.template_id);
                 return;
             }
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
             if (file.exists()) {
                 if (file.listFiles().length >= 7) {
-                    new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
+                    new LordStickersAsync().execute("" + PosterActivity.this.template_id);
                 } else if (new File(PosterActivity.this.temp_path).exists()) {
-                    new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
+                    new LordStickersAsync().execute("" + PosterActivity.this.template_id);
                 } else {
-                    new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
+                    new LordStickersAsync().execute("" + PosterActivity.this.template_id);
                 }
             } else if (new File(PosterActivity.this.temp_path).exists()) {
-                new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
+                new LordStickersAsync().execute("" + PosterActivity.this.template_id);
             } else {
-                new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
+                new LordStickersAsync().execute("" + PosterActivity.this.template_id);
             }
         }
     }
@@ -455,7 +455,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
 
         protected Boolean doInBackground(String... params) {
             this.indx = Integer.parseInt(params[0]);
-            TemplateInfo templateInfo = (TemplateInfo) PosterActivity.this.templateList.get(this.indx);
+            TemplateInfo templateInfo = PosterActivity.this.templateList.get(this.indx);
             PosterActivity.this.template_id = templateInfo.getTEMPLATE_ID();
             PosterActivity.this.frame_Name = templateInfo.getFRAME_NAME();
             PosterActivity.this.temp_path = templateInfo.getTEMP_PATH();
@@ -488,13 +488,13 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             PosterActivity.this.seek.setProgress(PosterActivity.this.overlay_opacty);
             PosterActivity.this.seek_blur.setProgress(PosterActivity.this.overlay_blur);
             String vv = String.valueOf(Integer.parseInt(this.postion));
-            if (((TemplateInfo) PosterActivity.this.templateList.get(this.indx)).getTYPE().equals("USER")) {
+            if (PosterActivity.this.templateList.get(this.indx).getTYPE().equals("USER")) {
                 PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
             }
-            if (((TemplateInfo) PosterActivity.this.templateList.get(this.indx)).getTYPE().equals("FREESTYLE")) {
+            if (PosterActivity.this.templateList.get(this.indx).getTYPE().equals("FREESTYLE")) {
                 PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
             }
-            if (((TemplateInfo) PosterActivity.this.templateList.get(this.indx)).getTYPE().equals("FRIDAY")) {
+            if (PosterActivity.this.templateList.get(this.indx).getTYPE().equals("FRIDAY")) {
                 PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
             }
         }
@@ -642,7 +642,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             final int intExtra = getIntent().getIntExtra("position", 0);
             this.center_rel.post(new Runnable() {
                 public void run() {
-                    new LordTemplateAsync().execute(new String[]{"" + intExtra});
+                    new LordTemplateAsync().execute("" + intExtra);
                 }
             });
         }
@@ -671,16 +671,16 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.horizontalPickerColor.setOnColorChangedListener(color_change_listener);
         this.shadowPickerColor.setOnColorChangedListener(color_change_listener);
         this.pickerBg.setOnColorChangedListener(color_change_listener);
-        this.guideline = (ImageView) findViewById(R.id.guidelines);
+        this.guideline = findViewById(R.id.guidelines);
         this.select_backgnd.setBackgroundResource(R.drawable.overlay);
         this.select_effect.setBackgroundResource(R.drawable.overlay);
         this.user_image.setBackgroundResource(R.drawable.overlay);
         this.add_text.setBackgroundResource(R.drawable.overlay);
         this.add_sticker.setBackgroundResource(R.drawable.overlay);
-        this.rellative = (RelativeLayout) findViewById(R.id.rellative);
-        this.btn_bck1 = (ImageButton) findViewById(R.id.btn_bck1);
+        this.rellative = findViewById(R.id.rellative);
+        this.btn_bck1 = findViewById(R.id.btn_bck1);
         this.btn_bck1.setOnClickListener(this);
-        this.lay_scroll = (ScrollView) findViewById(R.id.lay_scroll);
+        this.lay_scroll = findViewById(R.id.lay_scroll);
         this.lay_scroll.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -700,15 +700,15 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         ((TextView) findViewById(R.id.txt_shadow)).setTypeface(this.ttf);
         ((TextView) findViewById(R.id.txt_bg)).setTypeface(this.ttf);
         ((TextView) findViewById(R.id.txt_controls)).setTypeface(this.ttf);
-        ImageButton btnRight = (ImageButton) findViewById(R.id.btnRight);
-        ImageButton btnUp = (ImageButton) findViewById(R.id.btnUp);
-        ImageButton btnDown = (ImageButton) findViewById(R.id.btnDown);
-        ImageButton btnLeftS = (ImageButton) findViewById(R.id.btnLeftS);
-        ImageButton btnRightS = (ImageButton) findViewById(R.id.btnRightS);
-        ImageButton btnUpS = (ImageButton) findViewById(R.id.btnUpS);
-        ImageButton btnDownS = (ImageButton) findViewById(R.id.btnDownS);
+        ImageButton btnRight = findViewById(R.id.btnRight);
+        ImageButton btnUp = findViewById(R.id.btnUp);
+        ImageButton btnDown = findViewById(R.id.btnDown);
+        ImageButton btnLeftS = findViewById(R.id.btnLeftS);
+        ImageButton btnRightS = findViewById(R.id.btnRightS);
+        ImageButton btnUpS = findViewById(R.id.btnUpS);
+        ImageButton btnDownS = findViewById(R.id.btnDownS);
 
-        ((ImageButton) findViewById(R.id.btnLeft)).setOnTouchListener(new RepeatListener(200, 100, new OnClickListener() {
+        findViewById(R.id.btnLeft).setOnTouchListener(new RepeatListener(200, 100, new OnClickListener() {
             @Override
             public void onClick(View view) {
                 PosterActivity.this.updatePositionSticker("decX");
@@ -784,7 +784,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         if (!profile.equals("no")) {
             if (profile.equals("Background")) {
                 this.lay_handletails.setVisibility(View.GONE);
-                this.frame_Name = "b" + String.valueOf(i);
+                this.frame_Name = "b" + i;
                 this.temp_path = "";
                 Options bfo = new Options();
                 bfo.inJustDecodeBounds = true;
@@ -796,7 +796,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 return;
             }
             if (profile.equals("Texture")) {
-                this.frame_Name = "t" + String.valueOf(i);
+                this.frame_Name = "t" + i;
                 this.temp_path = "";
                 this.curTileId = Constants.Imageid1[i];
                 this.showtailsSeek = true;
@@ -818,7 +818,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 if (ratio.equals("")) {
                     this.frame_Name = "";
                 } else {
-                    this.frame_Name = "b" + String.valueOf(i);
+                    this.frame_Name = "b" + i;
                 }
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), ".Poster Maker Stickers/category1");
                 if (file.exists() || file.mkdirs()) {
@@ -830,7 +830,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                         for (File absolutePath22 : file2.listFiles()) {
                             this.uriArry.add(absolutePath22.getAbsolutePath());
                         }
-                        this.temp_path = (String) this.uriArry.get(i);
+                        this.temp_path = this.uriArry.get(i);
                     }
                     File file1 = new File(this.temp_path);
                     if (file1.exists()) {
@@ -844,7 +844,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                     }
                     if (!ratio.equals("")) {
                         String draName = file1.getName().replace(".png", "");
-                        new SavebackgrundAsync().execute(new String[]{draName, ratio, profile, crted});
+                        new SavebackgrundAsync().execute(draName, ratio, profile, crted);
                         return;
                     } else if (this.OneShow) {
                         errorDialogTempInfo();
@@ -879,7 +879,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         if (!crted.equals("created")) {
             setImageBitmapAndResizeLayout(bit, "nonCreated");
         } else if (profile.equals("Texture")) {
-            setImageBitmapAndResizeLayout(Constants.getTiledBitmap((Activity) this, this.curTileId, bit, this.seek_tailys), "created");
+            setImageBitmapAndResizeLayout(Constants.getTiledBitmap(this, this.curTileId, bit, this.seek_tailys), "created");
         } else {
             setImageBitmapAndResizeLayout(bit, "created");
         }
@@ -933,50 +933,50 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             this.background_blur.setVisibility(View.GONE);
         }
         if (creted.equals("created")) {
-            new BlurOperationTwoAsync(this, bit, this.background_blur).execute(new String[]{""});
+            new BlurOperationTwoAsync(this, bit, this.background_blur).execute("");
             return;
         }
-        new BlurOperationAsync(this, bit, this.background_blur).execute(new String[]{""});
+        new BlurOperationAsync(this, bit, this.background_blur).execute("");
     }
 
     private void intilization() {
         this.ttf = Constants.getTextTypeface(this);
-        this.center_rel = (RelativeLayout) findViewById(R.id.center_rel);
-        this.lay_touchremove = (RelativeLayout) findViewById(R.id.lay_touchremove);
-        this.main_rel = (RelativeLayout) findViewById(R.id.main_rel);
-        this.background_img = (ImageView) findViewById(R.id.background_img);
-        this.background_blur = (ImageView) findViewById(R.id.background_blur);
-        this.txt_stkr_rel = (RelativeLayout) findViewById(R.id.txt_stkr_rel);
-        this.user_image = (RelativeLayout) findViewById(R.id.user_image);
-        this.select_backgnd = (RelativeLayout) findViewById(R.id.select_backgnd);
-        this.select_effect = (RelativeLayout) findViewById(R.id.select_effect);
-        this.add_sticker = (RelativeLayout) findViewById(R.id.add_sticker);
-        this.add_text = (RelativeLayout) findViewById(R.id.add_text);
-        this.lay_effects = (LinearLayout) findViewById(R.id.lay_effects);
-        this.lay_sticker = (RelativeLayout) findViewById(R.id.lay_sticker);
-        this.lay_handletails = (RelativeLayout) findViewById(R.id.lay_handletails);
-        this.seekbar_container = (LinearLayout) findViewById(R.id.seekbar_container);
-        this.shape_rel = (RelativeLayout) findViewById(R.id.shape_rel);
-        this.seek_tailys = (SeekBar) findViewById(R.id.seek_tailys);
-        this.alphaSeekbar = (SeekBar) findViewById(R.id.alpha_seekBar);
-        this.seekBar3 = (SeekBar) findViewById(R.id.seekBar3);
-        this.seekBar_shadow = (SeekBar) findViewById(R.id.seekBar_shadow);
-        this.hueSeekbar = (SeekBar) findViewById(R.id.hue_seekBar);
-        this.trans_img = (ImageView) findViewById(R.id.trans_img);
+        this.center_rel = findViewById(R.id.center_rel);
+        this.lay_touchremove = findViewById(R.id.lay_touchremove);
+        this.main_rel = findViewById(R.id.main_rel);
+        this.background_img = findViewById(R.id.background_img);
+        this.background_blur = findViewById(R.id.background_blur);
+        this.txt_stkr_rel = findViewById(R.id.txt_stkr_rel);
+        this.user_image = findViewById(R.id.user_image);
+        this.select_backgnd = findViewById(R.id.select_backgnd);
+        this.select_effect = findViewById(R.id.select_effect);
+        this.add_sticker = findViewById(R.id.add_sticker);
+        this.add_text = findViewById(R.id.add_text);
+        this.lay_effects = findViewById(R.id.lay_effects);
+        this.lay_sticker = findViewById(R.id.lay_sticker);
+        this.lay_handletails = findViewById(R.id.lay_handletails);
+        this.seekbar_container = findViewById(R.id.seekbar_container);
+        this.shape_rel = findViewById(R.id.shape_rel);
+        this.seek_tailys = findViewById(R.id.seek_tailys);
+        this.alphaSeekbar = findViewById(R.id.alpha_seekBar);
+        this.seekBar3 = findViewById(R.id.seekBar3);
+        this.seekBar_shadow = findViewById(R.id.seekBar_shadow);
+        this.hueSeekbar = findViewById(R.id.hue_seekBar);
+        this.trans_img = findViewById(R.id.trans_img);
         this.alphaSeekbar.setOnSeekBarChangeListener(this);
         this.seekBar3.setOnSeekBarChangeListener(this);
         this.seekBar_shadow.setOnSeekBarChangeListener(this);
         this.hueSeekbar.setOnSeekBarChangeListener(this);
         this.seek_tailys.setOnSeekBarChangeListener(this);
-        this.seek = (SeekBar) findViewById(R.id.seek);
-        this.lay_filter = (RelativeLayout) findViewById(R.id.lay_filter);
-        this.lay_dupliText = (LinearLayout) findViewById(R.id.lay_dupliText);
-        this.lay_dupliStkr = (LinearLayout) findViewById(R.id.lay_dupliStkr);
-        this.lay_edit = (LinearLayout) findViewById(R.id.lay_edit);
+        this.seek = findViewById(R.id.seek);
+        this.lay_filter = findViewById(R.id.lay_filter);
+        this.lay_dupliText = findViewById(R.id.lay_dupliText);
+        this.lay_dupliStkr = findViewById(R.id.lay_dupliStkr);
+        this.lay_edit = findViewById(R.id.lay_edit);
         this.lay_dupliText.setOnClickListener(this);
         this.lay_dupliStkr.setOnClickListener(this);
         this.lay_edit.setOnClickListener(this);
-        this.seek_blur = (SeekBar) findViewById(R.id.seek_blur);
+        this.seek_blur = findViewById(R.id.seek_blur);
         this.trans_img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.o1));
         this.hueSeekbar.setProgress(1);
         this.seek.setMax(255);
@@ -990,8 +990,8 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.seek_blur.setOnSeekBarChangeListener(this);
         this.seek_tailys.setMax(290);
         this.seek_tailys.setProgress(90);
-        this.logo_ll = (LinearLayout) findViewById(R.id.logo_ll);
-        this.img_oK = (Button) findViewById(R.id.btn_done);
+        this.logo_ll = findViewById(R.id.logo_ll);
+        this.img_oK = findViewById(R.id.btn_done);
         this.img_oK.setOnClickListener(this);
         this.user_image.setOnClickListener(this);
         this.select_backgnd.setOnClickListener(this);
@@ -1000,17 +1000,17 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.add_text.setOnClickListener(this);
         this.lay_touchremove.setOnClickListener(this);
         this.center_rel.setOnClickListener(this);
-        this.lay_textEdit = (LinearLayout) findViewById(R.id.lay_textEdit);
+        this.lay_textEdit = findViewById(R.id.lay_textEdit);
         this.animSlideUp = Constants.getAnimUp(this);
         this.animSlideDown = Constants.getAnimDown(this);
-        this.verticalSeekBar = (SeekBar) findViewById(R.id.seekBar2);
+        this.verticalSeekBar = findViewById(R.id.seekBar2);
         this.verticalSeekBar.setOnSeekBarChangeListener(this);
-        this.horizontalPicker = (LineColorPicker) findViewById(R.id.picker);
-        this.horizontalPickerColor = (LineColorPicker) findViewById(R.id.picker1);
-        this.shadowPickerColor = (LineColorPicker) findViewById(R.id.pickerShadow);
-        this.pickerBg = (LineColorPicker) findViewById(R.id.pickerBg);
-        this.lay_color = (RelativeLayout) findViewById(R.id.lay_color);
-        this.lay_hue = (RelativeLayout) findViewById(R.id.lay_hue);
+        this.horizontalPicker = findViewById(R.id.picker);
+        this.horizontalPickerColor = findViewById(R.id.picker1);
+        this.shadowPickerColor = findViewById(R.id.pickerShadow);
+        this.pickerBg = findViewById(R.id.pickerBg);
+        this.lay_color = findViewById(R.id.lay_color);
+        this.lay_hue = findViewById(R.id.lay_hue);
         this.lay_effects.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1026,8 +1026,8 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             }
         });
 
-        btn_layControls=(Button)findViewById(R.id.btn_layControls);
-        lay_container=(FrameLayout)findViewById(R.id.lay_container);
+        btn_layControls= findViewById(R.id.btn_layControls);
+        lay_container= findViewById(R.id.lay_container);
         btn_layControls.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
 
@@ -1051,19 +1051,19 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             }
         });
 
-        this.fontsShow = (LinearLayout) findViewById(R.id.fontsShow);
-        this.colorShow = (LinearLayout) findViewById(R.id.colorShow);
-        this.sadowShow = (LinearLayout) findViewById(R.id.sadowShow);
-        this.bgShow = (LinearLayout) findViewById(R.id.bgShow);
-        this.controlsShow = (LinearLayout) findViewById(R.id.controlsShow);
-        this.layArr[0] = (RelativeLayout) findViewById(R.id.lay_fonts);
-        this.layArr[1] = (RelativeLayout) findViewById(R.id.lay_colors);
-        this.layArr[2] = (RelativeLayout) findViewById(R.id.lay_shadow);
-        this.layArr[3] = (RelativeLayout) findViewById(R.id.lay_backgnd);
-        this.layArr[4] = (RelativeLayout) findViewById(R.id.lay_controls);
+        this.fontsShow = findViewById(R.id.fontsShow);
+        this.colorShow = findViewById(R.id.colorShow);
+        this.sadowShow = findViewById(R.id.sadowShow);
+        this.bgShow = findViewById(R.id.bgShow);
+        this.controlsShow = findViewById(R.id.controlsShow);
+        this.layArr[0] = findViewById(R.id.lay_fonts);
+        this.layArr[1] = findViewById(R.id.lay_colors);
+        this.layArr[2] = findViewById(R.id.lay_shadow);
+        this.layArr[3] = findViewById(R.id.lay_backgnd);
+        this.layArr[4] = findViewById(R.id.lay_controls);
         setSelected(R.id.lay_fonts);
         this.adapter = new AssetsGridMain(this, getResources().getStringArray(R.array.fonts_array));
-        GridView font_gridview = (GridView) findViewById(R.id.font_gridview);
+        GridView font_gridview = findViewById(R.id.font_gridview);
         font_gridview.setAdapter(this.adapter);
         font_gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -1071,17 +1071,17 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 PosterActivity.this.adapter.setSelected(position);
             }
         });
-        HorizontalListView listview = (HorizontalListView) findViewById(R.id.listview);
+        HorizontalListView listview = findViewById(R.id.listview);
         listview.setAdapter(new ImageViewAdapter(this, this.imageId));
         listview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                PosterActivity.this.setTextBgTexture("btxt" + String.valueOf(position));
+                PosterActivity.this.setTextBgTexture("btxt" + position);
             }
         });
-        this.lay_colorOpacity = (RelativeLayout) findViewById(R.id.lay_colorOpacity);
-        this.lay_controlStkr = (RelativeLayout) findViewById(R.id.lay_controlStkr);
-        this.lay_colorOacity = (LinearLayout) findViewById(R.id.lay_colorOacity);
-        this.controlsShowStkr = (LinearLayout) findViewById(R.id.controlsShowStkr);
+        this.lay_colorOpacity = findViewById(R.id.lay_colorOpacity);
+        this.lay_controlStkr = findViewById(R.id.lay_controlStkr);
+        this.lay_colorOacity = findViewById(R.id.lay_colorOacity);
+        this.controlsShowStkr = findViewById(R.id.controlsShowStkr);
         this.lay_colorOpacity.setOnClickListener(this);
         this.lay_controlStkr.setOnClickListener(this);
 
@@ -1582,8 +1582,8 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     }
 
     private void initViewPager() {
-        this.tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        this._mViewPager = (ViewPager) findViewById(R.id.imageviewPager);
+        this.tabs = findViewById(R.id.tabs);
+        this._mViewPager = findViewById(R.id.imageviewPager);
         this._mViewPager.setAdapter(new StickerViewPagerAdapter(this, getSupportFragmentManager()));
         this.tabs.setViewPager(this._mViewPager);
         this.tabs.setTypeface(this.ttf, 0);
@@ -1734,7 +1734,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 dialog1.setContentView(R.layout.save_success_dialog);
                 ((TextView) dialog1.findViewById(R.id.heater)).setTypeface(PosterActivity.this.ttfHeader);
                 ((TextView) dialog1.findViewById(R.id.txt_free)).setTypeface(PosterActivity.this.ttf);
-                Button btn_ok = (Button) dialog1.findViewById(R.id.btn_ok);
+                Button btn_ok = dialog1.findViewById(R.id.btn_ok);
                 btn_ok.setTypeface(PosterActivity.this.ttf, 1);
                 btn_ok.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
@@ -1842,49 +1842,49 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             this.color_Type = "colored";
             addSticker("", stkr_path, null);
         } else if (call_Value == 0) {
-            setDrawable("colored", "a_" + String.valueOf(position + 1));
+            setDrawable("colored", "a_" + (position + 1));
         } else if (call_Value == 1) {
-            setDrawable("colored", "b_" + String.valueOf(position + 1));
+            setDrawable("colored", "b_" + (position + 1));
         } else if (call_Value == 2) {
-            setDrawable("colored", "c_" + String.valueOf(position + 1));
+            setDrawable("colored", "c_" + (position + 1));
         } else if (call_Value == 3) {
-            setDrawable("white", "d_" + String.valueOf(position + 1));
+            setDrawable("white", "d_" + (position + 1));
         } else if (call_Value == 4) {
-            setDrawable("colored", "e_" + String.valueOf(position + 1));
+            setDrawable("colored", "e_" + (position + 1));
         } else if (call_Value == 5) {
-            setDrawable("colored", "f_" + String.valueOf(position + 1));
+            setDrawable("colored", "f_" + (position + 1));
         } else if (call_Value == 6) {
-            setDrawable("colored", "g_" + String.valueOf(position + 1));
+            setDrawable("colored", "g_" + (position + 1));
         } else if (call_Value == 7) {
-            setDrawable("colored", "h_" + String.valueOf(position + 1));
+            setDrawable("colored", "h_" + (position + 1));
         } else if (call_Value == 8) {
-            setDrawable("colored", "i_" + String.valueOf(position + 1));
+            setDrawable("colored", "i_" + (position + 1));
         } else if (call_Value == 9) {
-            setDrawable("colored", "j_" + String.valueOf(position + 1));
+            setDrawable("colored", "j_" + (position + 1));
         } else if (call_Value == 10) {
-            setDrawable("colored", "k_" + String.valueOf(position + 1));
+            setDrawable("colored", "k_" + (position + 1));
         } else if (call_Value == 11) {
-            setDrawable("colored", "l_" + String.valueOf(position + 1));
+            setDrawable("colored", "l_" + (position + 1));
         } else if (call_Value == 12) {
-            setDrawable("colored", "m_" + String.valueOf(position + 1));
+            setDrawable("colored", "m_" + (position + 1));
         } else if (call_Value == 13) {
-            setDrawable("colored", "n_" + String.valueOf(position + 1));
+            setDrawable("colored", "n_" + (position + 1));
         } else if (call_Value == 14) {
-            setDrawable("colored", "o_" + String.valueOf(position + 1));
+            setDrawable("colored", "o_" + (position + 1));
         } else if (call_Value == 15) {
-            setDrawable("colored", "p_" + String.valueOf(position + 1));
+            setDrawable("colored", "p_" + (position + 1));
         } else if (call_Value == 16) {
-            setDrawable("colored", "q_" + String.valueOf(position + 1));
+            setDrawable("colored", "q_" + (position + 1));
         } else if (call_Value == 17) {
-            setDrawable("colored", "r_" + String.valueOf(position + 1));
+            setDrawable("colored", "r_" + (position + 1));
         } else if (call_Value == 18) {
-            setDrawable("colored", "s_" + String.valueOf(position + 1));
+            setDrawable("colored", "s_" + (position + 1));
         } else if (call_Value == 19) {
-            setDrawable("colored", "t_" + String.valueOf(position + 1));
+            setDrawable("colored", "t_" + (position + 1));
         } else if (call_Value == 20) {
-            setDrawable("white", "sh" + String.valueOf(position + 1));
+            setDrawable("white", "sh" + (position + 1));
         } else if (call_Value == 21) {
-            setDrawable("white", "u_" + String.valueOf(position + 1));
+            setDrawable("white", "u_" + (position + 1));
         } else {
             this.color_Type = "colored";
         }
@@ -1982,7 +1982,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
 
             public void onDismiss(DialogInterface dialog) {
                 if (PosterActivity.this.checkMemory) {
-                    Toast.makeText(PosterActivity.this.getApplicationContext(), PosterActivity.this.getString(R.string.saved).toString() + " " + PosterActivity.this.filename, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PosterActivity.this.getApplicationContext(), PosterActivity.this.getString(R.string.saved) + " " + PosterActivity.this.filename, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(PosterActivity.this, ShareActivity.class);
                     intent.putExtra("uri", PosterActivity.this.filename);
                     intent.putExtra("way", "Poster");
@@ -2086,7 +2086,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 } else {
                     this.background_blur.setVisibility(View.GONE);
                 }
-                new BlurOperationAsync(this, imgBtmap, this.background_blur).execute(new String[]{""});
+                new BlurOperationAsync(this, imgBtmap, this.background_blur).execute("");
                 return;
             default:
                 return;
@@ -2095,7 +2095,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
 
     private void addTilesBG(int resId) {
         if (resId != 0) {
-            setImageBitmapAndResizeLayout1(Constants.getTiledBitmap((Activity) this, resId, imgBtmap, this.seek_tailys));
+            setImageBitmapAndResizeLayout1(Constants.getTiledBitmap(this, resId, imgBtmap, this.seek_tailys));
         }
     }
 
@@ -2618,13 +2618,13 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         dialog.requestWindowFeature(1);
         dialog.setContentView(R.layout.dialog);
         ((TextView) dialog.findViewById(R.id.txt_title)).setTypeface(Constants.getHeaderTypeface(this));
-        ((ImageButton) dialog.findViewById(R.id.img_camera)).setOnClickListener(new OnClickListener() {
+        dialog.findViewById(R.id.img_camera).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 PosterActivity.this.onCameraButtonClick();
                 dialog.dismiss();
             }
         });
-        ((ImageButton) dialog.findViewById(R.id.img_gallery)).setOnClickListener(new OnClickListener() {
+        dialog.findViewById(R.id.img_gallery).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 PosterActivity.this.onGalleryButtonClick();
                 dialog.dismiss();
@@ -2670,13 +2670,13 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             dialog.setContentView(R.layout.leave_dialog);
             ((TextView) dialog.findViewById(R.id.txtapp)).setTypeface(this.ttfHeader);
             ((TextView) dialog.findViewById(R.id.txt_free)).setTypeface(this.ttf);
-            ((Button) dialog.findViewById(R.id.btn_yes)).setOnClickListener(new OnClickListener() {
+            dialog.findViewById(R.id.btn_yes).setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
                     PosterActivity.this.finish();
                     dialog.dismiss();
                 }
             });
-            ((Button) dialog.findViewById(R.id.btn_no)).setOnClickListener(new OnClickListener() {
+            dialog.findViewById(R.id.btn_no).setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
                     dialog.dismiss();
                 }
@@ -2733,7 +2733,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         ((TextView) dialog.findViewById(R.id.txtapp)).setTypeface(this.ttfHeader);
         ((TextView) dialog.findViewById(R.id.txt)).setTypeface(this.ttf);
         ((TextView) dialog.findViewById(R.id.txt1)).setTypeface(this.ttf);
-        Button dialogButton = (Button) dialog.findViewById(R.id.btn_template);
+        Button dialogButton = dialog.findViewById(R.id.btn_template);
         dialogButton.setTypeface(this.ttf, Typeface.BOLD);
         dialogButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -2741,7 +2741,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 dialog.dismiss();
             }
         });
-        Button btn_yes = (Button) dialog.findViewById(R.id.btn_image);
+        Button btn_yes = dialog.findViewById(R.id.btn_image);
         btn_yes.setTypeface(this.ttf, Typeface.BOLD);
         btn_yes.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -2769,14 +2769,14 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         dialog.setContentView(R.layout.error_dialog);
         ((TextView) dialog.findViewById(R.id.txtapp)).setTypeface(this.ttfHeader);
         ((TextView) dialog.findViewById(R.id.txt)).setTypeface(this.ttf);
-        Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
+        Button btn_ok = dialog.findViewById(R.id.btn_ok);
         btn_ok.setTypeface(this.ttf);
         btn_ok.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 PosterActivity.this.finish();
             }
         });
-        Button btn_conti = (Button) dialog.findViewById(R.id.btn_conti);
+        Button btn_conti = dialog.findViewById(R.id.btn_conti);
         btn_conti.setTypeface(this.ttf);
         btn_conti.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
