@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="ab.cd.ef.postermaker">
@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:appComponentFactory="whateverString"
         android:hardwareAccelerated="true"
@@ -22,69 +23,76 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:appComponentFactory">
+        <activity
+            android:name=".main.SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.PrivacyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.QuitActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id" />
 
         <activity
-            android:name="ab.cd.ef.postermaker.main.MainActivity"
+            android:name=".main.MainActivity"
             android:exported="true"
-            android:theme="@style/NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="ab.cd.ef.postermaker.main.SelectImageActivity"
+            android:name=".main.SelectImageActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
             android:name="com.msl.textmodule.TextActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.TemplatesActivity"
+            android:name=".main.TemplatesActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.SelectImageTwoActivity"
+            android:name=".main.SelectImageTwoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.PosterActivity"
+            android:name=".main.PosterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.CropActivity"
+            android:name=".main.CropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.CropActivityTwo"
+            android:name=".main.CropActivityTwo"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.ShareImageActivity"
+            android:name=".main.ShareImageActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.ShareActivity"
+            android:name=".main.ShareActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ab.cd.ef.postermaker.main.SavedHistoryActivity"
+            android:name=".main.SavedHistoryActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
-
+             />
         <activity
-            android:name="ab.cd.ef.postermaker.main.MyCreationActivity"
+            android:name=".main.MyCreationActivity"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name="ab.cd.ef.postermaker.main.PickColorImageActivity"
+            android:name=".main.PickColorImageActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
-
+             />
     </application>
 
 </manifest>

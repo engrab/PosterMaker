@@ -1,6 +1,5 @@
 package ab.cd.ef.postermaker.main;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -24,22 +22,25 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.internal.view.SupportMenu;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.ads.AdView;
+import com.google.android.material.navigation.NavigationView;
 import com.msl.demo.view.ComponentInfo;
 import com.msl.textmodule.TextInfo;
 
@@ -47,132 +48,84 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
-
 import ab.cd.ef.postermaker.R;
 import ab.cd.ef.postermaker.create.DatabaseHandler;
 import ab.cd.ef.postermaker.create.TemplateInfo;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private static final int PERMISSIONS_REQUEST = 100;
     private static final int REQUEST_PERMISSION = 101;
     public static int height1;
     public static float ratio;
     public static int width;
+    private final Handler handler = new Handler();
+    public SharedPreferences prefs;
     SharedPreferences appPreferences;
     int count = 0;
-    AnimationDrawable danim;
-    private Editor editor;
-    private final Handler handler = new Handler();
     boolean isAppInstalled = false;
-    private boolean isDataStored = false;
-    private boolean isOpenFisrtTime = false;
-//    LinearLayout layView;
+    //    LinearLayout layView;
     AdView mAdView;
     SharedPreferences preferences;
-    public SharedPreferences prefs;
-    private Runnable runnable;
     ArrayList<String> stkrNameList;
     Typeface ttHADER;
     Typeface ttText;
-//    TextView txt_load;
-
+    //    TextView txt_load;
+    DrawerLayout drawer;
     ProgressDialog progressDialog;
+    private Editor editor;
+    private boolean isDataStored = false;
+    private boolean isOpenFisrtTime = false;
+    private Runnable runnable;
+    private NavigationView navigationView;
 
-    class running_thread implements Runnable {
-        running_thread() {
-        }
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        drawer.closeDrawers();
+        switch (item.getItemId()) {
 
-        public void run() {
-            if (MainActivity.this.count == 0) {
-                MainActivity.this.count = 1;
-//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading));
-            } else if (MainActivity.this.count == 1) {
-                MainActivity.this.count = 2;
-//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + ".");
-            } else if (MainActivity.this.count == 2) {
-                MainActivity.this.count = 3;
-//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "..");
-            } else if (MainActivity.this.count == 3) {
-                MainActivity.this.count = 0;
-//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "...");
-            }
-            MainActivity.this.handler.postDelayed(MainActivity.this.runnable, 400);
-        }
-    }
+            case R.id.action_privacy:
 
-    private class DummyAsync extends AsyncTask<String, String, Boolean> {
-        private DummyAsync() {
-        }
+                startActivity(new Intent(MainActivity.this, PrivacyActivity.class));
+                return true;
 
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+            case R.id.action_more:
 
-        protected Boolean doInBackground(String... params) {
-            MainActivity.this.init("no");
-            return Boolean.valueOf(true);
-        }
-
-        protected void onPostExecute(Boolean isDownloaded) {
-            super.onPostExecute(isDownloaded);
-            HideTextAnimation();
-        }
-    }
-
-    private class SaveStickersAsync extends AsyncTask<String, String, Boolean> {
-        int size;
-
-        private SaveStickersAsync() {
-            this.size = 0;
-        }
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected Boolean doInBackground(String... params) {
-            String stkrName = params[0];
-            this.size = Integer.parseInt(params[1]) + 1;
-            try {
-                Bitmap bitmap = BitmapFactory.decodeResource(MainActivity.this.getResources(), MainActivity.this.getResources().getIdentifier(stkrName, "drawable", MainActivity.this.getPackageName()));
-                if (bitmap != null) {
-                    return Boolean.valueOf(saveBitmapObject(bitmap, stkrName));
+                String url = "https://play.google.com/store/apps/developer?id=Lala+Apps+Studio";
+                Uri uri = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return Boolean.valueOf(false);
-        }
+                return true;
 
-        protected void onPostExecute(Boolean isDownloaded) {
-            super.onPostExecute(isDownloaded);
-            if (isDownloaded.booleanValue()) {
-                if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
-                    MainActivity.this.init("yes");
+            case R.id.action_rate:
+
+                String url1 = "https://play.google.com/store/apps/details?id=" + getPackageName();
+                Uri uri1 = Uri.parse(url1);
+                Intent intent1 = new Intent(Intent.ACTION_VIEW, uri1);
+                if (intent1.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent1);
                 }
-            } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
-                MainActivity.this.init("yes");
-            }
+                return true;
+            case R.id.action_share:
+
+                try {
+                    String text = "Download Anime Wallpaper to set as home and lock screen\n https://play.google.com/store/apps/details?id=" + getPackageName();
+                    Intent txtIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    txtIntent.setType("text/plain");
+                    txtIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Wallpaper");
+                    txtIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+                    startActivity(Intent.createChooser(txtIntent, "Share Anime Wallpaper"));
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "can not share text", Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+
+
         }
 
-        private boolean saveBitmapObject(Bitmap bitmap, String fname) {
-            File myDir = Constants.getSaveFileLocation("category1");
-            myDir.mkdirs();
-            File file = new File(myDir, fname + ".png");
-            if (file.exists()) {
-                file.delete();
-            }
-            try {
-                FileOutputStream ostream = new FileOutputStream(file);
-                boolean saved = bitmap.compress(CompressFormat.PNG, 100, ostream);
-                ostream.close();
-                return saved;
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.i("testing", "Exception" + e.getMessage());
-                return false;
-            }
-        }
+        return false;
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,8 +133,7 @@ public class MainActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_main);
 
         progressDialog = new ProgressDialog(this);
-
-        LinearLayout adContainer= findViewById(R.id.adContainer);
+        drawer = findViewById(R.id.drawer_layout);
 
         this.preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         this.editor = getSharedPreferences("MY_PREFS_NAME", 0).edit();
@@ -204,8 +156,6 @@ public class MainActivity extends Activity implements OnClickListener {
         findViewById(R.id.lay_template).setOnClickListener(this);
         findViewById(R.id.lay_photos).setOnClickListener(this);
         findViewById(R.id.lay_more).setOnClickListener(this);
-        this.danim = (AnimationDrawable) ((ImageView) findViewById(R.id.img_drawable)).getDrawable();
-        this.danim.start();
         Typeface ttf = Constants.getHeaderTypeface(this);
 //        this.layView = findViewById(R.id.layView);
 //        this.txt_load = findViewById(R.id.txt_load);
@@ -215,7 +165,7 @@ public class MainActivity extends Activity implements OnClickListener {
             this.stkrNameList.add("bh" + k);
         }
         if (VERSION.SDK_INT < 23 || (checkSelfPermission("android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED)) {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
             File[] files = file.listFiles();
             if (!file.exists()) {
                 downloadStickers();
@@ -232,11 +182,21 @@ public class MainActivity extends Activity implements OnClickListener {
                 ViewTextAnimation();
                 return;
             }
-        }else {
+        } else {
 
             permissionDialog();
         }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
 
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(MainActivity.this);
 
     }
 
@@ -254,7 +214,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private void HideTextAnimation() {
 
         this.handler.removeCallbacks(this.runnable);
-        if (progressDialog.isShowing()){
+        if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 //        this.layView.setVisibility(View.VISIBLE);
@@ -300,40 +260,17 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     public void onBackPressed() {
-        exitDialog();
-    }
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.close();
+        } else {
+            startActivity(new Intent(MainActivity.this, QuitActivity.class));
+            finish();
 
-    private void exitDialog() {
-        final Dialog dialog = new Dialog(this, 16974126);
-        dialog.requestWindowFeature(1);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.exit_dialog);
-        ((TextView) dialog.findViewById(R.id.txtH)).setTypeface(this.ttHADER);
-        ((TextView) dialog.findViewById(R.id.txt_free)).setTypeface(this.ttText);
-        Button btn_ok = dialog.findViewById(R.id.btn_yes);
-        btn_ok.setTypeface(this.ttText, 1);
-        btn_ok.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                String url = "https://play.google.com/store/apps/details?id=" + MainActivity.this.getPackageName();
-                Intent i = new Intent("android.intent.action.VIEW");
-                i.setData(Uri.parse(url));
-                MainActivity.this.startActivity(i);
-                dialog.cancel();
-                Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.thank_toast), Toast.LENGTH_SHORT).show();
-            }
-        });
-        Button btn_conti = dialog.findViewById(R.id.btn_no);
-        btn_conti.setTypeface(this.ttText, 1);
-        btn_conti.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                MainActivity.this.finish();
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101 && VERSION.SDK_INT >= 23) {
             if (checkSelfPermission("android.permission.CAMERA") != 0 || checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED || checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
                 permissionDialog();
@@ -370,12 +307,13 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100) {
             File file;
             File[] files;
             if (grantResults[0] == 0) {
                 if (VERSION.SDK_INT < 23 || (checkSelfPermission("android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED)) {
-                    file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
+                    file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
                     files = file.listFiles();
                     if (!file.exists()) {
                         downloadStickers();
@@ -396,7 +334,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 this.isOpenFisrtTime = true;
                 permissionDialog();
             } else if (VERSION.SDK_INT < 23 || (checkSelfPermission("android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED && checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED)) {
-                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
                 files = file.listFiles();
                 if (!file.exists()) {
                     downloadStickers();
@@ -424,15 +362,15 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void downloadStickers() {
         try {
-            File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
+            File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
             if (pictureFileDir.exists() || pictureFileDir.mkdirs()) {
                 File rootFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-                File file = new File(rootFolder, getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
+                File file = new File(rootFolder, getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
                 File[] files = pictureFileDir.listFiles();
                 int i;
                 if (file.exists()) {
                     for (i = 0; i < this.stkrNameList.size(); i++) {
-                        if (!new File(rootFolder, getString(R.string.app_name)+"/.Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
+                        if (!new File(rootFolder, getString(R.string.app_name) + "/.Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
                             new SaveStickersAsync().execute(this.stkrNameList.get(i), "" + i);
                         } else if (files.length >= this.stkrNameList.size()) {
                             HideTextAnimation();
@@ -441,7 +379,7 @@ public class MainActivity extends Activity implements OnClickListener {
                     return;
                 }
                 for (i = 0; i < this.stkrNameList.size(); i++) {
-                    if (!new File(rootFolder, getString(R.string.app_name)+"/.Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
+                    if (!new File(rootFolder, getString(R.string.app_name) + "/.Poster Maker Stickers/category1/" + this.stkrNameList.get(i) + ".png").exists()) {
                         new SaveStickersAsync().execute(this.stkrNameList.get(i), "" + i);
                     } else if (files.length >= this.stkrNameList.size()) {
                         HideTextAnimation();
@@ -495,7 +433,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "DECEMBER 20, 2020 SOUTHTOWN MALL, CITY", "ffont14.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(240.0f), Constants.getNewY(849.0f), Constants.getNewWidth(597.0f), Constants.getNewHeight(157.0f), 0.0f, "TEXT", 5, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "CHECK IT TWICE", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(162.0f), Constants.getNewY(370.0f), Constants.getNewWidth(759.0f), Constants.getNewHeight(81.0f), 0.0f, "TEXT", 9, 0, 0, 0, 0, 0, "", "", ""));
         templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_7", "", "1:1", "Color", "90", "FREESTYLE", "", "ffffe4b4", "", 80, 0));
-        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(77.0f), Constants.getNewY(68.0f), Constants.getNewWidth(925.0f), Constants.getNewHeight(557.0f), 0.0f, 0.0f, "", "STICKER", 2, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh5.png", "colored", 4, 0, "", "", "", null, null));
+        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(77.0f), Constants.getNewY(68.0f), Constants.getNewWidth(925.0f), Constants.getNewHeight(557.0f), 0.0f, 0.0f, "", "STICKER", 2, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/" + getString(R.string.app_name) + "/.Poster Maker Stickers/category1/bh5.png", "colored", 4, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(151.99493f), Constants.getNewY(484.005f), Constants.getNewWidth(763.0f), Constants.getNewHeight(629.0f), 0.0f, 0.0f, "e_3", "STICKER", 3, 0, 100, 0, 0, 0, 0, "", "colored", 78, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(72.646515f), Constants.getNewY(-173.99994f), Constants.getNewWidth(933.0f), Constants.getNewHeight(1039.0f), -90.0f, 0.0f, "sh14", "STICKER", 5, -7773943, 100, 0, 0, 0, 0, "", "white", 100, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(83.99982f), Constants.getNewY(-155.88539f), Constants.getNewWidth(911.0f), Constants.getNewHeight(1003.0f), -90.0f, 0.0f, "sh14", "STICKER", 7, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "", "", "", null, null));
@@ -543,21 +481,21 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "ELVIS | CHRIS SHINN", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 14, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(347.5f), Constants.getNewY(784.0f), Constants.getNewWidth(379.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 13, 0, 0, 0, 0, 0, "", "", ""));
         templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_16", "", "1:1", "Color", "90", "FREESTYLE", "", "ffffffff", "", 80, 0));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(159.0f), Constants.getNewY(446.5f), Constants.getNewWidth(755.0f), Constants.getNewHeight(687.0f), 0.0f, 0.0f, "e_3", "STICKER", 1, 0, 100, 0, 0, 0, 0, "", "colored", 92, 0, "", "", "", null, null));
-        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(225.5f), Constants.getNewY(20.0f), Constants.getNewWidth(641.0f), Constants.getNewHeight(639.0f), 0.0f, 0.0f, "", "STICKER", 5, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh4.png", "colored", 1, 0, "", "", "", null, null));
+        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(225.5f), Constants.getNewY(20.0f), Constants.getNewWidth(641.0f), Constants.getNewHeight(639.0f), 0.0f, 0.0f, "", "STICKER", 5, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/" + getString(R.string.app_name) + "/.Poster Maker Stickers/category1/bh4.png", "colored", 1, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(206.91235f), Constants.getNewY(-7.0f), Constants.getNewWidth(679.0f), Constants.getNewHeight(695.0f), 0.0f, 0.0f, "sh11", "STICKER", 6, -12103933, 100, 0, 0, 0, 0, "", "white", 95, 0, "", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "M I S S I N G", "ffont18.otf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(386.0f), Constants.getNewY(669.0f), Constants.getNewWidth(303.0f), Constants.getNewHeight(85.0f), 0.0f, "TEXT", 0, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "REWARD 200 $", "ffont6.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(235.5f), Constants.getNewY(765.0f), Constants.getNewWidth(605.0f), Constants.getNewHeight(89.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "Last seen at 12th cor. 20th sts. City", "ffont18.otf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(210.0f), Constants.getNewY(876.0f), Constants.getNewWidth(655.0f), Constants.getNewHeight(115.0f), 0.0f, "TEXT", 3, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "Please Call Alex At (123) 456 789 For Any Leads.", "ffont18.otf", -11841534, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(48.0f), Constants.getNewY(991.0f), Constants.getNewWidth(981.0f), Constants.getNewHeight(81.0f), 0.0f, "TEXT", 4, 0, 0, 0, 0, 0, "", "", ""));
         templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_17", "b45", "1:1", "Background", "90", "FREESTYLE", "", "", "", 80, 255));
-        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(49.27881f), Constants.getNewY(2.0f), Constants.getNewWidth(983.0f), Constants.getNewHeight(635.0f), 0.0f, 0.0f, "", "STICKER", 4, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh1.png", "colored", 1, 0, "-137,35", "", "", null, null));
+        dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(49.27881f), Constants.getNewY(2.0f), Constants.getNewWidth(983.0f), Constants.getNewHeight(635.0f), 0.0f, 0.0f, "", "STICKER", 4, 0, 100, 0, 0, 0, 0, "/storage/emulated/0/DCIM/" + getString(R.string.app_name) + "/.Poster Maker Stickers/category1/bh1.png", "colored", 1, 0, "-137,35", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(31.5f), Constants.getNewY(-230.73828f), Constants.getNewWidth(1019.0f), Constants.getNewHeight(1101.0f), -90.0f, 0.0f, "sh14", "STICKER", 5, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "-326,-367", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "BABY MARIELLA", "font3.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 2, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(265.0f), Constants.getNewY(689.0f), Constants.getNewWidth(553.0f), Constants.getNewHeight(195.0f), 0.0f, "TEXT", 0, 0, 0, 0, 0, 0, "-141,65", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "RSVP TO JENNIFER AT (123) 456 789", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 2, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(235.0f), Constants.getNewY(1005.0f), Constants.getNewWidth(617.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 1, 0, 0, 0, 0, 0, "-462,23", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "1ST BIRTHDAY", "ffont4.ttf", -13421773, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(499.28082f), Constants.getNewY(803.7013f), Constants.getNewWidth(339.0f), Constants.getNewHeight(89.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "932,18", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "April 20, 2020 • 3 pm Your Place 1234 Street, Town, Country", "ffont10.ttf", -13421773, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(260.5f), Constants.getNewY(913.0f), Constants.getNewWidth(557.0f), Constants.getNewHeight(99.0f), 0.0f, "TEXT", 3, 0, 0, 0, 0, 0, "-162,13", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "You are cordially invited to", "ffont4.ttf", -13421773, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(324.45563f), Constants.getNewY(626.03394f), Constants.getNewWidth(443.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 6, 0, 0, 0, 0, 0, "41,223", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_20", "b7", "1:1", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh6.png", "", "", 80, 0));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_20", "b7", "1:1", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/" + getString(R.string.app_name) + "/.Poster Maker Stickers/category1/bh6.png", "", "", 80, 0));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(-121.46063f), Constants.getNewY(0.62127686f), Constants.getNewWidth(675.0f), Constants.getNewHeight(481.0f), 0.0f, 0.0f, "b_19", "STICKER", 0, 0, 100, 0, 0, 0, 0, "", "colored", 1, 0, "", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "SHOP NOW", "ffont6.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 20, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(301.0f), Constants.getNewY(796.0f), Constants.getNewWidth(493.0f), Constants.getNewHeight(115.0f), 0.0f, "TEXT", 1, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "Address, Street, Town/City, Country", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 176, Constants.getNewX(0.0f), Constants.getNewY(917.5f), Constants.getNewWidth(1085.0f), Constants.getNewHeight(81.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "", "", ""));
@@ -583,7 +521,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "FREE ENTRY AND PARKING  |  PARTY STARTS AT 7 PM SILOCO BEACH PARTY, SINGAPORE", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(68.5f), Constants.getNewY(1289.4852f), Constants.getNewWidth(935.0f), Constants.getNewHeight(93.0f), 0.0f, "TEXT", 5, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "F E A T U R I N G", "ffont48.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(379.5f), Constants.getNewY(1135.0f), Constants.getNewWidth(317.0f), Constants.getNewHeight(101.0f), 0.0f, "TEXT", 6, 0, 0, 0, 0, 0, "", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "WWW.SILOEVENTS.COM", "ffont14.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(339.75427f), Constants.getNewY(1367.0f), Constants.getNewWidth(403.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 7, 0, 0, 0, 0, 0, "", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_2", "b9", "3:4", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh3.png", "", "o1", 118, 255));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("raw_2", "b9", "3:4", "Temp_Path", "90", "FREESTYLE", "/storage/emulated/0/DCIM/" + getString(R.string.app_name) + "/.Poster Maker Stickers/category1/bh3.png", "", "o1", 118, 255));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(51.49997f), Constants.getNewY(-185.0f), Constants.getNewWidth(977.0f), Constants.getNewHeight(1079.0f), -90.0f, 0.0f, "sh14", "STICKER", 4, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(244.0f), Constants.getNewY(3.0f), Constants.getNewWidth(297.0f), Constants.getNewHeight(245.0f), 0.0f, 0.0f, "g_15", "STICKER", 5, 0, 100, 0, 0, 0, 0, "", "colored", 1, 0, "", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(537.0f), Constants.getNewY(6.0f), Constants.getNewWidth(297.0f), Constants.getNewHeight(245.0f), 0.0f, -180.0f, "g_15", "STICKER", 6, 0, 100, 0, 0, 0, 0, "", "colored", 1, 0, "", "", "", null, null));
@@ -745,7 +683,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "OFF", "ffont10.ttf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", 0, 0, Constants.getNewX(667.0f), Constants.getNewY(455.0f), Constants.getNewWidth(123.0f), Constants.getNewHeight(127.0f), 0.0f, "TEXT", 7, 0, 0, 0, 0, 0, "201,199", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "%", "ffont25.ttf", ViewCompat.MEASURED_STATE_MASK, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", 0, 0, Constants.getNewX(651.0f), Constants.getNewY(280.0f), Constants.getNewWidth(153.0f), Constants.getNewHeight(249.0f), 0.0f, "TEXT", 8, 0, 0, 0, 0, 0, "186,138", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "SHOP NAME", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", -1, 0, Constants.getNewX(397.0f), Constants.getNewY(129.0f), Constants.getNewWidth(293.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 9, 0, 0, 0, 0, 0, "116,223", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_22", "b6", "1:1", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh7.png", "", "", 80, 0));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_22", "b6", "1:1", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/" + getString(R.string.app_name) + "/.Poster Maker Stickers/category1/bh7.png", "", "", 80, 0));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(33.812683f), Constants.getNewY(375.5f), Constants.getNewWidth(417.0f), Constants.getNewHeight(247.0f), 0.0f, 0.0f, "sh1", "STICKER", 0, -4464, 100, 0, 0, 0, 0, "", "white", 1, 0, "-25,60", "", "", null, null));
         dh.insertTextRow(new TextInfo(templateId, "Get up to 50% off", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(147.0f), Constants.getNewY(380.5f), Constants.getNewWidth(191.0f), Constants.getNewHeight(237.0f), 0.0f, "TEXT", 1, 0, 0, 0, 0, 0, "167,144", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "My Beauty Salon", "ffont10.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(66.0f), Constants.getNewY(670.0f), Constants.getNewWidth(351.0f), Constants.getNewHeight(183.0f), 0.0f, "TEXT", 2, 0, 0, 0, 0, 0, "87,171", "", ""));
@@ -876,7 +814,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "GET IN STORE EARLY THURSDAY FOR A COUPON GIVEAWAY!", "", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(58.0f), Constants.getNewY(1245.0f), Constants.getNewWidth(965.0f), Constants.getNewHeight(143.0f), 0.0f, "TEXT", 9, 0, 0, 0, 0, 0, "-220,191", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "THURSDAY", "", -65485, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(277.2207f), Constants.getNewY(1069.0f), Constants.getNewWidth(525.0f), Constants.getNewHeight(137.0f), 0.0f, "TEXT", 10, 0, 0, 0, 0, 0, "0,194", "", ""));
         dh.insertTextRow(new TextInfo(templateId, "3PM", "", -65485, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", ViewCompat.MEASURED_STATE_MASK, 0, Constants.getNewX(299.0f), Constants.getNewY(865.0f), Constants.getNewWidth(483.0f), Constants.getNewHeight(257.0f), 0.0f, "TEXT", 11, 0, 0, 0, 0, 0, "21,134", "", ""));
-        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_11", "b11", "3:4", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/"+getString(R.string.app_name)+"/.Poster Maker Stickers/category1/bh2.png", "", "", 80, 172));
+        templateId = (int) dh.insertTemplateRow(new TemplateInfo("fri_11", "b11", "3:4", "Temp_Path", "90", "FRIDAY", "/storage/emulated/0/DCIM/" + getString(R.string.app_name) + "/.Poster Maker Stickers/category1/bh2.png", "", "", 80, 172));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(56.00006f), Constants.getNewY(194.00006f), Constants.getNewWidth(961.0f), Constants.getNewHeight(935.0f), -90.0f, 0.0f, "sh34", "STICKER", 0, ViewCompat.MEASURED_STATE_MASK, 67, 0, 0, 0, 0, "", "white", 1, 0, "-297,-284", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(-8.499939f), Constants.getNewY(183.0f), Constants.getNewWidth(1097.0f), Constants.getNewHeight(959.0f), -90.0f, 0.0f, "sh14", "STICKER", 1, 0, 100, 0, 0, 0, 0, "", "white", 1, 0, "-365,-296", "", "", null, null));
         dh.insertComponentInfoRow(new ComponentInfo(templateId, Constants.getNewX(9.00001f), Constants.getNewY(25.000006f), Constants.getNewWidth(367.0f), Constants.getNewHeight(367.0f), -25.268269f, 0.0f, "b_21", "STICKER", 7, 0, 100, 0, 0, 0, 0, "", "colored", 17, 0, "0,0", "", "", null, null));
@@ -940,7 +878,6 @@ public class MainActivity extends Activity implements OnClickListener {
         dh.insertTextRow(new TextInfo(templateId, "FOR WOMEN | FOR MEN", "ffont6.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", 0, 0, Constants.getNewX(199.8534f), Constants.getNewY(1200.0f), Constants.getNewWidth(453.0f), Constants.getNewHeight(79.0f), 0.0f, "TEXT", 12, 0, 0, 0, 0, 0, "36,223", "", ""));
 
 
-
         Log.e("not rrrrr", "eeeee");
         this.isDataStored = true;
         this.editor = this.appPreferences.edit();
@@ -950,6 +887,104 @@ public class MainActivity extends Activity implements OnClickListener {
             HideTextAnimation();
         }
     }
+
+    class running_thread implements Runnable {
+        running_thread() {
+        }
+
+        public void run() {
+            if (MainActivity.this.count == 0) {
+                MainActivity.this.count = 1;
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading));
+            } else if (MainActivity.this.count == 1) {
+                MainActivity.this.count = 2;
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + ".");
+            } else if (MainActivity.this.count == 2) {
+                MainActivity.this.count = 3;
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "..");
+            } else if (MainActivity.this.count == 3) {
+                MainActivity.this.count = 0;
+//                MainActivity.this.txt_load.setText(MainActivity.this.getResources().getString(R.string.loading) + "...");
+            }
+            MainActivity.this.handler.postDelayed(MainActivity.this.runnable, 400);
+        }
+    }
+
+    private class DummyAsync extends AsyncTask<String, String, Boolean> {
+        private DummyAsync() {
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... params) {
+            MainActivity.this.init("no");
+            return Boolean.valueOf(true);
+        }
+
+        protected void onPostExecute(Boolean isDownloaded) {
+            super.onPostExecute(isDownloaded);
+            HideTextAnimation();
+        }
+    }
+
+    private class SaveStickersAsync extends AsyncTask<String, String, Boolean> {
+        int size;
+
+        private SaveStickersAsync() {
+            this.size = 0;
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... params) {
+            String stkrName = params[0];
+            this.size = Integer.parseInt(params[1]) + 1;
+            try {
+                Bitmap bitmap = BitmapFactory.decodeResource(MainActivity.this.getResources(), MainActivity.this.getResources().getIdentifier(stkrName, "drawable", MainActivity.this.getPackageName()));
+                if (bitmap != null) {
+                    return Boolean.valueOf(saveBitmapObject(bitmap, stkrName));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return Boolean.valueOf(false);
+        }
+
+        protected void onPostExecute(Boolean isDownloaded) {
+            super.onPostExecute(isDownloaded);
+            if (isDownloaded.booleanValue()) {
+                if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
+                    MainActivity.this.init("yes");
+                }
+            } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1").listFiles().length >= MainActivity.this.stkrNameList.size()) {
+                MainActivity.this.init("yes");
+            }
+        }
+
+        private boolean saveBitmapObject(Bitmap bitmap, String fname) {
+            File myDir = Constants.getSaveFileLocation("category1");
+            myDir.mkdirs();
+            File file = new File(myDir, fname + ".png");
+            if (file.exists()) {
+                file.delete();
+            }
+            try {
+                FileOutputStream ostream = new FileOutputStream(file);
+                boolean saved = bitmap.compress(CompressFormat.PNG, 100, ostream);
+                ostream.close();
+                return saved;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("testing", "Exception" + e.getMessage());
+                return false;
+            }
+        }
+    }
+
 
 
    /* private void insertPremiumSales(String str) {
@@ -1701,7 +1736,7 @@ public class MainActivity extends Activity implements OnClickListener {
         dbHandler.insertTextRow(new TextInfo(i, "BIG HOLIDAY", "ffont48.ttf", -1, 100, -13421773, 0, "0", 0, 0, Constants.getNewX(201.01974f), Constants.getNewY(206.30974f), Constants.getNewWidth(422.0f), Constants.getNewHeight(158.0f), 0.0f, "TEXT", 8, 0, 0, 0, 0, 5, "41,173", "", ""));
         dbHandler.insertTextRow(new TextInfo(i, "SALE", "ffont48.ttf", -1, 100, -13421773, 0, "0", 0, 0, Constants.getNewX(195.45352f), Constants.getNewY(269.89197f), Constants.getNewWidth(429.0f), Constants.getNewHeight(241.0f), 0.0f, "TEXT", 11, 0, 0, 0, 0, 5, "37,131", "", ""));
         dbHandler.insertTextRow(new TextInfo(i, "IN-STORE ONLY", "ffont48.ttf", -1, 100, -13421773, 0, "0", 0, 0, Constants.getNewX(252.04465f), Constants.getNewY(1035.396f), Constants.getNewWidth(316.0f), Constants.getNewHeight(77.0f), 0.0f, "TEXT", 13, 0, 0, 0, 0, 5, "94,213", "", ""));
-    }*/
+    } */
 
    /* private void insertPremiumSports(String str) {
         DatabaseHandler dbHandler = DatabaseHandler.getDbHandler(getApplicationContext());
@@ -2133,5 +2168,6 @@ public class MainActivity extends Activity implements OnClickListener {
         dbHandler.insertTextRow(new TextInfo(i5, "{ YOUR TEXT HERE }", "ffont48.ttf", -1, 100, ViewCompat.MEASURED_STATE_MASK, 0, "0", 0, 0, Constants.getNewX(219.29427f), Constants.getNewY(1178.2258f), Constants.getNewWidth(383.0f), Constants.getNewHeight(75.0f), 0.0f, "TEXT", 14, 0, 0, 0, 0, 5, "60,214", "", ""));
         dbHandler.insertTextRow(new TextInfo(i5, "SPORTS MARCH", "ffont1.ttf", -1441862, 100, ViewCompat.MEASURED_STATE_MASK, 20, "0", 0, 0, Constants.getNewX(72.75091f), Constants.getNewY(874.1888f), Constants.getNewWidth(678.0f), Constants.getNewHeight(166.0f), 0.0f, "TEXT", 15, 0, 0, 0, 0, 5, "-86,169", "", ""));
         dbHandler.insertTextRow(new TextInfo(i5, "LIVE ON THE GIANT SCREEN", "ffont1.ttf", -2031711, 100, ViewCompat.MEASURED_STATE_MASK, 9, "0", 0, 0, Constants.getNewX(109.04946f), Constants.getNewY(1013.75507f), Constants.getNewWidth(604.0f), Constants.getNewHeight(75.0f), 0.0f, "TEXT", 16, 0, 0, 0, 0, 5, "-50,214", "", ""));
-    }*/
+    }
+}*/
 }

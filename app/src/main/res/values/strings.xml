@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <resources>
+<resources>
     <string name="app_name">Poster Maker</string>
     <string name="DesignOptionsInstruction">Long Press on your Design for Options.</string>
     <string name="NoDesigns">No Design\'s saved. Check out \'Free Designs\' Or \'Create Poster\' and save as Design.</string>
@@ -245,11 +245,10 @@
     <string name="txt_All">Lock All</string>
     <string name="no_layers">No Layers !!</string>
 
-    <string name="id_b">YOUR_PLACEMENT_ID</string>
-    <string name="id_i">YOUR_PLACEMENT_ID</string>
-    <string name="app_id">ca-app-pub-1352846817713612~8595084475</string>
-    <string name="id_b_g">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="id_i_g">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="navigation_drawer_open">Navigation Drawer Open</string>
+    <string name="navigation_drawer_close">Navigation Drawer Close</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
 
 
 </resources>
