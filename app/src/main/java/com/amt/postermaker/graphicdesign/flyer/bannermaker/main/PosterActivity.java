@@ -991,7 +991,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.seek_tailys.setMax(290);
         this.seek_tailys.setProgress(90);
         this.logo_ll = (LinearLayout) findViewById(R.id.logo_ll);
-        this.img_oK = (Button) findViewById(R.id.btn_done);
+        this.img_oK =  findViewById(R.id.btn_done);
         this.img_oK.setOnClickListener(this);
         this.user_image.setOnClickListener(this);
         this.select_backgnd.setOnClickListener(this);
