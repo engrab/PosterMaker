@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Poster Maker</string>
+    <string name="app_name">Poster, Flyer &amp; Banner Maker</string>
     <string name="DesignOptionsInstruction">Long Press on your Design for Options.</string>
     <string name="NoDesigns">No Design\'s saved. Check out \'Free Designs\' Or \'Create Poster\' and save as Design.</string>
     <string name="SavedAs">Save As</string>

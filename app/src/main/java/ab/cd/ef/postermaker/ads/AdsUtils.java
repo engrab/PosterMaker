@@ -1,5 +1,8 @@
 package ab.cd.ef.postermaker.ads;
+import android.app.Activity;
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -63,6 +66,29 @@ public class AdsUtils {
         linearLayout.removeAllViews();
         linearLayout.addView(adView);
         return adView;
+    }
+
+    public static AdView showInlineBanner(Context context, LinearLayout linearLayout) {
+
+        //get width of device
+        Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        float widthPixels = outMetrics.widthPixels;
+        float density = outMetrics.density;
+        int adWidth = (int) (widthPixels / density);
+
+        AdSize adSize = AdSize.getInlineAdaptiveBannerAdSize(adWidth, 320);
+
+        AdView bannerView = new AdView(context);
+        bannerView.setAdUnitId(context.getResources().getString(R.string.app_banner));
+        bannerView.setAdSize(adSize);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        bannerView.loadAd(adRequest);
+        linearLayout.removeAllViews();
+        linearLayout.addView(bannerView);
+        return bannerView;
+
     }
 
 }

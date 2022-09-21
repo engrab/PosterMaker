@@ -49,6 +49,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import ab.cd.ef.postermaker.R;
+import ab.cd.ef.postermaker.ads.AdsUtils;
 import ab.cd.ef.postermaker.create.DatabaseHandler;
 import ab.cd.ef.postermaker.create.TemplateInfo;
 
@@ -131,9 +132,21 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        progressDialog = new ProgressDialog(this);
         drawer = findViewById(R.id.drawer_layout);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(MainActivity.this);
+        AdsUtils.showInlineBanner(this, findViewById(R.id.llAds));
+        progressDialog = new ProgressDialog(this);
+
 
         this.preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         this.editor = getSharedPreferences("MY_PREFS_NAME", 0).edit();
@@ -152,10 +165,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             editor.putBoolean("isAppInstalled", true);
             editor.commit();
         }
-        findViewById(R.id.lay_poster).setOnClickListener(this);
-        findViewById(R.id.lay_template).setOnClickListener(this);
-        findViewById(R.id.lay_photos).setOnClickListener(this);
-        findViewById(R.id.lay_more).setOnClickListener(this);
+        findViewById(R.id.ivCreatePoster).setOnClickListener(this);
+        findViewById(R.id.ivFreeTemplate).setOnClickListener(this);
+        findViewById(R.id.ivMyDesign).setOnClickListener(this);
+        findViewById(R.id.ivMyWork).setOnClickListener(this);
         Typeface ttf = Constants.getHeaderTypeface(this);
 //        this.layView = findViewById(R.id.layView);
 //        this.txt_load = findViewById(R.id.txt_load);
@@ -186,17 +199,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
             permissionDialog();
         }
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
-        setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(MainActivity.this);
 
     }
 
@@ -231,18 +234,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.lay_more:
-                Intent i1 = new Intent("android.intent.action.VIEW");
-                i1.setData(Uri.parse("https://play.google.com/store/apps/developer?id="));
-                startActivity(i1);
-                return;
-            case R.id.lay_photos:
+            case R.id.ivMyWork:
                 startActivity(new Intent(this, MyCreationActivity.class));
                 return;
-            case R.id.lay_poster:
+            case R.id.ivMyDesign:
+                startActivity(new Intent(this, TemplatesActivity.class));
+                return;
+            case R.id.ivCreatePoster:
                 startActivity(new Intent(this, SelectImageActivity.class));
                 return;
-            case R.id.lay_template:
+            case R.id.ivFreeTemplate:
                 startActivity(new Intent(this, TemplatesActivity.class));
                 return;
             default:

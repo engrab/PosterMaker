@@ -4,6 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ic_bg"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,6 +16,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            app:titleTextColor="@android:color/white"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme" />
@@ -27,115 +29,55 @@
         android:id="@+id/llAds"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_weight="1"
         android:orientation="vertical" />
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:gravity="center">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        >
+
+        <ImageView
+            android:id="@+id/ivCreatePoster"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:src="@drawable/ic_create_poster"/>
+        <ImageView
+            android:id="@+id/ivFreeTemplate"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:src="@drawable/ic_free_template"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:layout_height="90dp"
+            android:orientation="horizontal">
 
-
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/ivMyDesign"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:src="@drawable/ic_my_design"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".1"/>
+            <ImageView
+                android:id="@+id/ivMyWork"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_my_work"/>
 
-                <LinearLayout
-                    android:id="@+id/layView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    android:weightSum="10">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <RelativeLayout
-                            android:id="@+id/lay_poster"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="1">
-
-                            <LinearLayout
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:layout_centerInParent="true"
-                                android:background="@drawable/new_poster" />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/lay_template"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1">
-
-                            <LinearLayout
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:layout_centerInParent="true"
-                                android:background="@drawable/design" />
-
-                        </RelativeLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <RelativeLayout
-                            android:id="@+id/lay_photos"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="1">
-
-                            <LinearLayout
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:layout_centerInParent="true"
-                                android:background="@drawable/my_posters" />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/lay_more"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1">
-
-                            <LinearLayout
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:layout_centerInParent="true"
-                                android:background="@drawable/more" />
-
-                        </RelativeLayout>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-            </RelativeLayout>
         </LinearLayout>
-    </RelativeLayout>
+
+
+    </LinearLayout>
 </LinearLayout>

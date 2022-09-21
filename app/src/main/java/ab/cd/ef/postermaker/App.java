@@ -17,9 +17,9 @@ public class App extends Application {
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-
+                new AppOpenUtils(App.this);
             }
         });
-        new AppOpenUtils(App.this);
+
     }
 }

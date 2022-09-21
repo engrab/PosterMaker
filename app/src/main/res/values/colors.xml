@@ -30,11 +30,11 @@
     <color name="cardview_shadow_start_color">#37000000</color>
 
     <color name="colorAccent">#6DB199</color>
-    <color name="colorPrimary">#3C6E62</color>
+    <color name="colorPrimary">#14103C</color>
     <color name="colorback">#6DB199</color>
     <color name="colormediam">#3C6E62</color>
 
-    <color name="colorPrimaryDark">#3C6E62</color>
+    <color name="colorPrimaryDark">#14103C</color>
     <color name="colorTextLibBackground">#ffffffff</color>
     <color name="colorTextLibBlack">#ff000000</color>
     <color name="colorTextLibSelected">#ffffffff</color>
