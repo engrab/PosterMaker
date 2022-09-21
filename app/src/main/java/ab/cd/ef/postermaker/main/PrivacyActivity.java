@@ -20,7 +20,7 @@ public class PrivacyActivity extends AppCompatActivity {
     private WebView privacy_policy;
     private ProgressBar progressBar_policy;
     AdView adView;
-    public static String privacyPolicy = "https://sites.google.com/view/trendingfreeappsstudio/home";
+    public static String privacyPolicy = "https://sites.google.com/view/appmetaprivacypolicy";
 
 
     @Override
