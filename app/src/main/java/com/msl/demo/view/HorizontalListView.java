@@ -16,7 +16,7 @@ import android.widget.Scroller;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import ab.cd.ef.postermaker.R_D;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.ChannelId;
 
 public class HorizontalListView extends AdapterView<ListAdapter> {
     protected ListAdapter mAdapter;
@@ -27,7 +27,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
     private int mDisplayOffset = 0;
     private GestureDetector mGesture;
     private int mLeftViewIndex = -1;
-    private int mMaxX = R_D.changed_1;
+    private int mMaxX = ChannelId.changed_1;
     protected int mNextX;
     private OnGestureListener mOnGesture = new C05943();
     private OnItemClickListener mOnItemClicked;
@@ -146,7 +146,7 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
         this.mDisplayOffset = 0;
         this.mCurrentX = 0;
         this.mNextX = 0;
-        this.mMaxX = R_D.changed_1;
+        this.mMaxX = ChannelId.changed_1;
         this.mScroller = new Scroller(getContext());
         this.mGesture = new GestureDetector(getContext(), this.mOnGesture);
     }

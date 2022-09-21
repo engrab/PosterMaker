@@ -28,7 +28,7 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.List;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class GridAdapter extends ArrayAdapter<StickerInfo> {
     public static int num = 0;

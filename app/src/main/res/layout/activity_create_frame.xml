@@ -435,7 +435,7 @@
                     android:background="@color/bg_color"
                     android:visibility="gone">
 
-                    <ab.cd.ef.postermaker.create.HorizontalListView
+                    <amt.ef.postermaker.create.HorizontalListView
                         android:id="@+id/images_listview"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
@@ -462,7 +462,7 @@
                         android:background="@drawable/ic_tcolor"
                         android:onClick="showColorDialog" />
 
-                    <ab.cd.ef.postermaker.create.HorizontalListView
+                    <amt.ef.postermaker.create.HorizontalListView
                         android:id="@+id/color_listview"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
@@ -480,7 +480,7 @@
                     android:background="@color/bg_color"
                     android:visibility="gone">
 
-                    <ab.cd.ef.postermaker.create.HorizontalListView
+                    <amt.ef.postermaker.create.HorizontalListView
                         android:id="@+id/texture_listview"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
@@ -497,7 +497,7 @@
                     android:background="@color/bg_color"
                     android:visibility="gone">
 
-                    <ab.cd.ef.postermaker.create.HorizontalListView
+                    <amt.ef.postermaker.create.HorizontalListView
                         android:id="@+id/bg_listview"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"

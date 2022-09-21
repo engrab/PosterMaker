@@ -22,7 +22,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import ab.cd.ef.postermaker.Main;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.Main;
 
 
 public class ImageUtils {

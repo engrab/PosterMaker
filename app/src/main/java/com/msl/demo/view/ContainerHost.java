@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.HashMap;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class ContainerHost extends RelativeLayout {
     private String actAdapter = "";

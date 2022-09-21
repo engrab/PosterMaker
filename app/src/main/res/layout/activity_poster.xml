@@ -10,8 +10,8 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorTheme">
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimaryDark">
 
         <TextView
             android:id="@+id/txtheader"
@@ -21,32 +21,33 @@
             android:text="@string/app_name"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="23sp" />
+            />
 
         <ImageButton
             android:id="@+id/btn_bckprass"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/ic_back"
+            android:background="@drawable/ic_baseline_arrow_back_24"
             android:onClick="onClick" />
 
-        <Button
+        <ImageView
             android:id="@+id/btn_done"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/ic_done" />
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_done" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/lay_touchremove"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header">
 
@@ -150,10 +151,10 @@
 
         <Button
             android:id="@+id/btn_layControls"
-            android:background="@drawable/layers"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginTop="2dp" />
+            android:layout_marginTop="2dp"
+            android:background="@drawable/layers" />
 
     </RelativeLayout>
 
@@ -1344,7 +1345,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colormediam"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:weightSum="5">
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class TabHost extends HorizontalScrollView {
     private ContainerHost containerHost;

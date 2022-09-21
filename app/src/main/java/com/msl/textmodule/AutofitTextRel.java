@@ -33,7 +33,7 @@ import androidx.core.view.ViewCompat;
 import com.msl.textmodule.listener.MultiTouchListener;
 import com.msl.textmodule.listener.MultiTouchListener.TouchCallbackListener;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class AutofitTextRel extends RelativeLayout implements TouchCallbackListener {
     double angle = 0.0d;

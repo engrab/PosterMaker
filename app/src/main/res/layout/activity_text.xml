@@ -14,7 +14,7 @@
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:background="@drawable/textlib_back"
+            android:background="@drawable/ic_baseline_arrow_back_24"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -27,6 +27,7 @@
             android:id="@+id/headertext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:text="@string/textlib_header_text"
             android:layout_toLeftOf="@+id/btn_ok"
             android:layout_toRightOf="@+id/btn_back"
@@ -98,14 +99,14 @@
                     android:imeActionLabel="Done" />
 
                 <TextView
-                    android:textSize="20sp"
-                    android:textStyle="italic"
-                    android:textColor="@color/colorTextLibWhite"
                     android:id="@+id/hint_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:text="@string/textlib_your_text"
-                    android:layout_centerInParent="true" />
+                    android:textColor="@color/colorTextLibWhite"
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
             </RelativeLayout>
 
             <View

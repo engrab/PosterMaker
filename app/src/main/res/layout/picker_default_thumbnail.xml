@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ab.cd.ef.postermaker.utility.CustomSquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<amt.ef.postermaker.utility.CustomSquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:background="@color/colorTrans"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true">
 
-    <ab.cd.ef.postermaker.utility.CustomSquareImageView
+    <amt.ef.postermaker.utility.CustomSquareImageView
         android:layout_gravity="center"
         android:id="@+id/thumbnail_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</ab.cd.ef.postermaker.utility.CustomSquareFrameLayout>
+</amt.ef.postermaker.utility.CustomSquareFrameLayout>

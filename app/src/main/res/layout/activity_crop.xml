@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorback"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorback">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/header"
-            android:background="@color/colorTheme"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="?actionBarSize"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="horizontal">
 
-            <TextView
-                android:textSize="23sp"
-                android:textColor="@color/white"
-                android:id="@+id/headertext"
+            <ImageView
+                android:id="@+id/btn_bck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/ic_baseline_arrow_back_24"
+                android:padding="20dp" />
+
+            <TextView
+                android:id="@+id/headertext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
                 android:text="@string/crop"
-                android:layout_centerInParent="true"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
-            <ImageButton
-                android:id="@+id/btn_bck"
-                android:background="@drawable/ic_back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true" />
 
-            <Button
+            <ImageView
                 android:id="@+id/done"
-                android:background="@drawable/ic_done"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
+                android:layout_gravity="center"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_done" />
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/rel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"
             android:layout_above="@+id/footer"
-            android:layout_below="@+id/header">
+            android:layout_below="@+id/header"
+            android:layout_margin="1dp">
 
-            <ab.cd.ef.postermaker.crop.CropImageView
+            <amt.ef.postermaker.crop.CropImageView
                 android:id="@+id/cropimage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -59,197 +62,197 @@
 
         <RelativeLayout
             android:id="@+id/footer"
-            android:background="@color/colorTheme"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary">
 
             <HorizontalScrollView
-                android:scrollbars="none"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
                 <LinearLayout
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/cutom"
-                        android:background="@drawable/crop_buttons"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
+                        android:background="@drawable/crop_buttons"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/custom"
-                        android:textAllCaps="true" />
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/square"
-                        android:background="@drawable/crop_buttons"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
+                        android:background="@drawable/crop_buttons"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/square"
-                        android:textAllCaps="true" />
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio1"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="1:2" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="1:2"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio2"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="2:1" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="2:1"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio3"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="2:3" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="2:3"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio4"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="3:2" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="3:2"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio5"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="3:4" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="3:4"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio6"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="3:5" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="3:5"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio7"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="4:3" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="4:3"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio8"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="4:5" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="4:5"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio9"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="4:7" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="4:7"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio10"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="5:3" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="5:3"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio11"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="5:4" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="5:4"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio12"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="5:6" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="5:6"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio13"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="5:7" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="5:7"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio14"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="9:16" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="9:16"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <Button
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:id="@+id/ratio15"
-                        android:background="@drawable/crop_buttons"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
                         android:layout_margin="5dp"
-                        android:text="16:9" />
+                        android:background="@drawable/crop_buttons"
+                        android:text="16:9"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
                 </LinearLayout>
             </HorizontalScrollView>
         </RelativeLayout>

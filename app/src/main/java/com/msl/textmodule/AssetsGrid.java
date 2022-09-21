@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class AssetsGrid extends BaseAdapter {
     private final String[] Imageid;

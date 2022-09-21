@@ -35,7 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class ResizableStickerView extends RelativeLayout implements TouchCallbackListener {
     private static final int SELF_SIZE_DP = 30;

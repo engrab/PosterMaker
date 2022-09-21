@@ -14,7 +14,7 @@ import com.msl.demo.view.SquareImageViewList;
 
 import java.util.List;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class HoriontalListAdapter extends ArrayAdapter<StickerInfo> {
     Context context;

@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import ab.cd.ef.postermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 public class StickerGridActivity extends FragmentActivity {
     private static final String MyPREFERENCES = "MyPrefs";

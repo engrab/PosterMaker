@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_select_image"
     android:background="@color/colorAccent"
     android:layout_width="match_parent"
@@ -7,13 +8,13 @@
 
     <RelativeLayout
         android:id="@+id/header"
-        android:background="@color/colorTheme"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
         <ImageButton
             android:id="@+id/btn_bck"
-            android:background="@drawable/ic_back"
+            android:background="@drawable/ic_baseline_arrow_back_24"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -49,10 +50,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         android:layout_below="@+id/header">
 
         <it.neokree.materialtabs.MaterialTabHost
             android:id="@+id/tabHost"
+            android:backgroundTint="@color/colorPrimary"
+            app:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
 

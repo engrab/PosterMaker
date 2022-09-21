@@ -10,7 +10,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorTheme">
+        android:background="@color/colorPrimaryDark">
 
         <ImageButton
             android:id="@+id/btn_bck"
@@ -19,7 +19,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/ic_back"
+            android:background="@drawable/ic_baseline_arrow_back_24"
             android:onClick="onClick" />
 
         <TextView
@@ -37,14 +37,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         android:layout_below="@+id/header">
 
         <it.neokree.materialtabs.MaterialTabHost
             android:id="@+id/tabHost"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            app:textColor="@color/white"
             app:accentColor="@color/white"
-            app:primaryColor="@color/colorTheme" />
+            app:primaryColor="@color/colorPrimary" />
         <!--app:tabMode="0"-->
 
         <androidx.viewpager.widget.ViewPager
