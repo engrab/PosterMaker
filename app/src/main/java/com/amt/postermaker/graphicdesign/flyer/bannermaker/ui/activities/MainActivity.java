@@ -1,5 +1,6 @@
 package com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -138,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
 
+
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -202,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         }
 
 
+
     }
 
     private void ViewTextAnimation() {
@@ -218,9 +222,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     private void HideTextAnimation() {
 
         this.handler.removeCallbacks(this.runnable);
-        if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
+        progressDialog.dismiss();
 //        this.layView.setVisibility(View.VISIBLE);
 //        this.txt_load.setVisibility(View.GONE);
     }
