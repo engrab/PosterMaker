@@ -23,7 +23,7 @@ import java.util.Date;
 
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.App;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.main.SplashActivity;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.activities.SplashActivity;
 
 public class AppOpenUtils implements LifecycleObserver, Application.ActivityLifecycleCallbacks{
     private static final String LOG_TAG = "AppOpenManager";

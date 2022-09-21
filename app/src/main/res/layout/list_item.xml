@@ -18,10 +18,10 @@
 
             <ImageView
                 android:id="@+id/backimg"
-                android:background="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:alpha="0.8" />
+                android:alpha="0.8"
+                android:background="@color/colorPrimary" />
 
             <RelativeLayout
                 android:id="@+id/touch_rel"
@@ -33,8 +33,8 @@
                     android:layout_width="20dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:src="@drawable/layeradjust"
-                    android:alpha="0.25" />
+                    android:alpha="0.25"
+                    android:src="@drawable/layeradjust" />
 
                 <RelativeLayout
                     android:layout_width="60dp"

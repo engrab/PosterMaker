@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:appComponentFactory">
         <activity
-            android:name=".main.SplashActivity"
+            android:name=".ui.activities.SplashActivity"
             android:exported="true" >
 
             <intent-filter>
@@ -34,10 +34,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main.PrivacyActivity"
+            android:name=".ui.activities.PrivacyActivity"
             android:exported="false" />
         <activity
-            android:name=".main.QuitActivity"
+            android:name=".ui.activities.QuitActivity"
             android:exported="false" />
 
         <meta-data
@@ -45,12 +45,12 @@
             android:value="@string/app_id" />
 
         <activity
-            android:name=".main.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:theme="@style/AppTheme">
 
         </activity>
         <activity
-            android:name=".main.SelectImageActivity"
+            android:name=".ui.activities.SelectImageActivity"
             android:screenOrientation="portrait"
              />
         <activity
@@ -58,38 +58,38 @@
             android:screenOrientation="portrait"
              />
         <activity
-            android:name=".main.TemplatesActivity"
+            android:name=".ui.activities.TemplatesActivity"
             android:screenOrientation="portrait"
              />
         <activity
-            android:name=".main.SelectImageTwoActivity"
+            android:name=".ui.activities.SelectImageTwoActivity"
             android:screenOrientation="portrait"
              />
         <activity
-            android:name=".main.PosterActivity"
+            android:name=".ui.activities.PosterActivity"
             android:screenOrientation="portrait"
              />
         <activity
-            android:name=".main.CropActivity"
+            android:name=".ui.activities.CropActivity"
             android:screenOrientation="portrait"
              />
         <activity
-            android:name=".main.CropActivityTwo"
+            android:name=".ui.activities.SecondCropActivity"
             android:screenOrientation="portrait"
              />
 
         <activity
-            android:name=".main.ShareActivity"
+            android:name=".ui.activities.ShareActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.SavedHistoryActivity"
+            android:name=".ui.activities.SavedHistoryActivity"
             android:screenOrientation="portrait"
              />
         <activity
-            android:name=".main.MyCreationActivity"
+            android:name=".ui.activities.MyCreationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.PickColorImageActivity"
+            android:name=".ui.activities.PickColorImageActivity"
             android:screenOrientation="portrait"
              />
     </application>

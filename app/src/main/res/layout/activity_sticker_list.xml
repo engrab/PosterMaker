@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:id="@+id/header"
-        android:background="@color/color_theme"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -51,8 +51,8 @@
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabHost"
-        android:background="@color/color_theme"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary" />
 </RelativeLayout>

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/colorAccent"
+    android:background="@color/colorPrimaryDark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/layTitle"
-        android:background="@color/colorTheme"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:background="@color/colorTheme">
 
         <TextView
-            android:textSize="20sp"
-            android:textColor="@color/white"
             android:id="@+id/txt_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="@string/dialog_tilte2"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textAllCaps="true" />
+            android:layout_marginLeft="10dp"
+            android:text="@string/dialog_tilte2"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <RelativeLayout
