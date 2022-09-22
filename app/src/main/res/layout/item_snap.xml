@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<amt.ef.postermaker.utility.CustomSquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.CustomSquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:background="@android:color/transparent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true">
 
-    <amt.ef.postermaker.utility.CustomSquareImageView
+    <com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.CustomSquareImageView
         android:layout_gravity="center"
         android:id="@+id/thumbnail_image"
         android:background="@android:color/transparent"
@@ -14,4 +14,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp" />
-</amt.ef.postermaker.utility.CustomSquareFrameLayout>
+</com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.CustomSquareFrameLayout>

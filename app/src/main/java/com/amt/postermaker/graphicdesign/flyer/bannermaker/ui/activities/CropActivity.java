@@ -30,7 +30,7 @@ public class CropActivity extends Activity {
     Button custom;
     ImageView done;
     RelativeLayout footer;
-    RelativeLayout header;
+//    RelativeLayout header;
     TextView headertext;
     Button ratio1;
     Button ratio10;
@@ -61,7 +61,7 @@ public class CropActivity extends Activity {
 
         Toast.makeText(this, "Crop ", Toast.LENGTH_SHORT).show();
 
-        this.header = (RelativeLayout) findViewById(R.id.header);
+//        this.header = findViewById(R.id.header);
         this.rel = (RelativeLayout) findViewById(R.id.rel);
         this.footer = (RelativeLayout) findViewById(R.id.footer);
         this.footer.setVisibility(View.INVISIBLE);
@@ -287,7 +287,7 @@ public class CropActivity extends Activity {
     }
 
     private boolean isNetworkAvailable() {
-        NetworkInfo activeNetworkInfo = ((ConnectivityManager) getSystemService("connectivity")).getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = ((ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

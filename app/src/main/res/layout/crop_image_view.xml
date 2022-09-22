@@ -8,7 +8,7 @@
         android:scaleType="centerInside"
         android:adjustViewBounds="true" />
 
-    <amt.ef.postermaker.crop.CropOverlayView
+    <com.amt.postermaker.graphicdesign.flyer.bannermaker.gotoCrop.CropOverlayView
         android:id="@+id/CropOverlayView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -17,7 +17,7 @@ import com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.fragments.Fragment
 public class AdapterPager extends FragmentPagerAdapter {
     private String[] TITLES;
     private Context _context;
-    String[] cateName = new String[]{"MY_TEMP", "FREE_TEMP", "FRIDAY_TEMP"};
+    String[] cateName = new String[]{"FREE_TEMP", "FRIDAY_TEMP"};
     ArrayList<Fragment> fragments;
 
     public AdapterPager(Context context, FragmentManager fm) {
@@ -25,7 +25,7 @@ public class AdapterPager extends FragmentPagerAdapter {
         this._context = context;
         this.fragments = new ArrayList();
         FragmentDefault bakgrndFragment = new FragmentDefault();
-        this.TITLES = new String[]{context.getResources().getString(R.string.temp1), context.getResources().getString(R.string.temp2), context.getResources().getString(R.string.temp3)};
+        this.TITLES = new String[]{context.getResources().getString(R.string.temp2), context.getResources().getString(R.string.temp3)};
         for (int i = 0; i < this.TITLES.length; i++) {
             this.fragments.add(bakgrndFragment);
         }

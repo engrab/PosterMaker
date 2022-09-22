@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_select_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent">
+    tools:context=".ui.activities.TemplatesActivity">
 
     <RelativeLayout
         android:id="@+id/header"
@@ -19,8 +20,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/ic_baseline_arrow_back_24"
-            android:onClick="onClick" />
+            android:background="@drawable/ic_baseline_arrow_back_24" />
 
         <TextView
             android:id="@+id/txt_appname"

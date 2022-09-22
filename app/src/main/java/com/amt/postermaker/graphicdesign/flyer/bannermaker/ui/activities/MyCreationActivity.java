@@ -36,6 +36,13 @@ public class MyCreationActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         AdsUtils.showBannerSmall(this, findViewById(R.id.llAds));
 
+        findViewById(R.id.btn_bck).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyCreationActivity.super.onBackPressed();
+            }
+        });
+
     }
 
     public static void shareApplication(Context context) {

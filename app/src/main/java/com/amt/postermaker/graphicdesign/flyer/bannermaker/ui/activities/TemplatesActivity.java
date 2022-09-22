@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -20,7 +21,7 @@ import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.adapter.AdapterPager;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.Constants;
 
-public class TemplatesActivity extends FragmentActivity implements MaterialTabListener {
+public class TemplatesActivity extends AppCompatActivity implements MaterialTabListener {
     public static final int OPEN_UPDATE_ACITIVITY_TEMP = 1124;
     AdapterPager adapter;
     private Editor editor;
@@ -44,7 +45,7 @@ public class TemplatesActivity extends FragmentActivity implements MaterialTabLi
         findViewById(R.id.btn_bck).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                TemplatesActivity.this.onBackPressed();
+                TemplatesActivity.super.onBackPressed();
 
             }
         });

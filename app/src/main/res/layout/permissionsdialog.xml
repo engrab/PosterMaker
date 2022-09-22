@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
     <TextView
-        android:textSize="18sp"
-        android:textColor="@color/white"
         android:id="@+id/permission"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:text="@string/permission" />
+        android:text="@string/permission"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
     <TextView
-        android:textSize="15sp"
-        android:textColor="@color/white"
         android:id="@+id/permission_des"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
-        android:text="@string/permission_des" />
+        android:text="@string/permission_des"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:tint="@color/white"
-            android:src="@drawable/camera_pricon" />
+            android:src="@drawable/camera_pricon"
+            android:tint="@color/white" />
 
         <TextView
-            android:textSize="15sp"
-            android:textColor="@color/white"
-            android:layout_gravity="center_vertical"
             android:id="@+id/camera_prtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="10dp"
-            android:text="@string/camera" />
+            android:text="@string/camera"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:tint="@color/white"
-            android:src="@drawable/storage_pricon" />
+            android:src="@drawable/storage_pricon"
+            android:tint="@color/white" />
 
         <TextView
-            android:textSize="15sp"
-            android:textColor="@color/white"
-            android:layout_gravity="center_vertical"
             android:id="@+id/storage_prtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="10dp"
-            android:text="@string/storage" />
+            android:text="@string/storage"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <TextView
-        android:textSize="12sp"
-        android:textColor="@color/white"
         android:id="@+id/permission_des1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
-        android:text="@string/permission_des1" />
+        android:text="@string/permission_des1"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -110,12 +110,12 @@
             android:id="@+id/settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="20dp"
             android:layout_toLeftOf="@+id/ok"
             android:background="@color/white"
             android:text="@string/settings"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/black"
             android:textSize="18sp"
-            android:visibility="invisible" />
+            android:visibility="visible" />
     </RelativeLayout>
 </LinearLayout>
