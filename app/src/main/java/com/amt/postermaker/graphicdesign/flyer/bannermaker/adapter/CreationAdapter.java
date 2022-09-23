@@ -2,6 +2,7 @@ package com.amt.postermaker.graphicdesign.flyer.bannermaker.adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
@@ -37,7 +38,6 @@ public class CreationAdapter extends BaseAdapter {
     View vi;
 
     static class ViewHolder {
-        public FrameLayout frm;
         ImageView imgIcon;
 
         ViewHolder() {
@@ -47,7 +47,7 @@ public class CreationAdapter extends BaseAdapter {
     public CreationAdapter(Activity dAct, ArrayList<String> dUrl) {
         this.dactivity = dAct;
         this.imagegallary = dUrl;
-        inflater = (LayoutInflater) this.dactivity.getSystemService("layout_inflater");
+        inflater = (LayoutInflater) this.dactivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mSparseBooleanArray = new SparseBooleanArray(this.imagegallary.size());
     }
 
@@ -70,7 +70,6 @@ public class CreationAdapter extends BaseAdapter {
         if (row == null) {
             row = LayoutInflater.from(this.dactivity).inflate(R.layout.list_gallary, parent, false);
             holder = new ViewHolder();
-            holder.frm = (FrameLayout) row.findViewById(R.id.frm);
             holder.imgIcon = (ImageView) row.findViewById(R.id.imgIcon);
             holder.imgIcon.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {

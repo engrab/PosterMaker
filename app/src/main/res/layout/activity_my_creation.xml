@@ -45,7 +45,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-
         android:visibility="gone"
         android:layout_gravity="center"
         android:src="@drawable/no_image" />
@@ -55,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_above="@id/llAds"
         android:layout_below="@+id/header"
+        android:layout_margin="20dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -62,7 +62,7 @@
         <GridView
             android:id="@+id/lstList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="1.0"
             android:gravity="center"

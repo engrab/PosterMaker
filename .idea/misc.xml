@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/circle_back.xml" value="0.1575" />
         <entry key="app/src/main/res/drawable/rectangle_shape.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_create_frame.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_crop.xml" value="0.22" />
@@ -46,7 +47,7 @@
         <entry key="app/src/main/res/layout/libtext_btxt_lst_item.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout/libtext_grid_assets.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout/libtext_grid_assets_main.xml" value="0.37395833333333334" />
-        <entry key="app/src/main/res/layout/list_gallary.xml" value="0.37395833333333334" />
+        <entry key="app/src/main/res/layout/list_gallary.xml" value="0.5" />
         <entry key="app/src/main/res/layout/list_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/list_layout.xml" value="0.18854166666666666" />
         <entry key="app/src/main/res/layout/material_tab.xml" value="0.37395833333333334" />
