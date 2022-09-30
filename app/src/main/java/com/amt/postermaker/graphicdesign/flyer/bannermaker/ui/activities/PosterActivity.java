@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+
 import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -53,6 +54,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -71,8 +73,10 @@ import com.amt.postermaker.graphicdesign.flyer.bannermaker.interfaces.OnSetImage
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.listener.GetColorListener;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.listener.ListenerOnTouchEvent;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.models.BitmapDataObject;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.fragments.FragmentImage;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.fragments.ListFragment;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.Constants;
+
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.GPUImageFilterTools.FilterAdjuster;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.ImageUtils;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.TemplateInfo;
@@ -110,7 +114,8 @@ import jp.co.cyberagent.android.gpuimage.GPUImageGaussianBlurFilter;
 import yuku.ambilwarna.AmbilWarnaDialog;
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
 
-public class PosterActivity extends FragmentActivity implements OnClickListener, OnSeekBarChangeListener, TouchEventListener, AutofitTextRel.TouchEventListener, GetSnapListener, OnSetImageSticker, GetColorListener {
+public class PosterActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener, TouchEventListener, AutofitTextRel.TouchEventListener, GetSnapListener, OnSetImageSticker, GetColorListener {
+    private static final String TAG = "PosterActivity";
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
     private static final int OPEN_CUSTOM_ACITIVITY = 4;
@@ -683,7 +688,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         btn_layControls.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
 
-                if (lay_container.getVisibility() == 8) {
+                if (lay_container.getVisibility() == View.GONE) {
                     btn_layControls.setVisibility(View.GONE);
                     listFragment.getLayoutChild(true);
                     lay_container.setVisibility(View.VISIBLE);
@@ -2216,12 +2221,25 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                         e.printStackTrace();
                     }
                 }
+
+                /* from copy selectimageactivity*/
+//                if (requestCode == SELECT_PICTURE_FROM_CAMERA) {
+//                    try {
+//                        bitmap = Constants.getBitmapFromUri(this, data.getData(), this.screenWidth, this.screenHeight);
+//                        bitmap = ImageUtils.resizeBitmap(bitmap, (int) this.screenWidth, (int) this.screenHeight);
+//                        _main = new Intent(this, CropActivity.class);
+//                        _main.putExtra("value", "image");
+//                        startActivityForResult(_main, 4);
+//                    } catch (Exception e322) {
+//                        e322.printStackTrace();
+//                    }
+//                }
+                // original
                 if (requestCode == SELECT_PICTURE_FROM_CAMERA) {
                     try {
 
-
                         btmSticker = ImageUtils.resizeBitmap(Constants.getBitmapFromUri(this, data.getData(), this.screenWidth, this.screenHeight), (int) this.screenWidth, (int) this.screenWidth);
-                        intent = new Intent(this, SecondCropActivity.class);
+                        intent = new Intent(this, CropActivity.class);
                         intent.putExtra("value", "sticker");
                         startActivity(intent);
 
@@ -2230,6 +2248,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                         e2.printStackTrace();
                     }
                 }
+
                 if (requestCode == 4) {
                     bundle = data.getExtras();
                     this.profile = bundle.getString(Scopes.PROFILE);
@@ -2295,7 +2314,23 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             this.editMode = false;
         }
     }
+    // Returns the File for a photo stored on disk given the fileName
+    public File getPhotoFileUri(String fileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d(TAG, "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
+
+        return file;
+    }
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -2313,26 +2348,9 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                         "com.amt.postermaker.graphicdesign.flyer.bannermaker.provider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+                startActivityForResult(takePictureIntent, SELECT_PICTURE_FROM_CAMERA);
             }
         }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
     }
 
     @Override
@@ -2377,19 +2395,36 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         dialog.show();
     }
 
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        File storageDir = getFilesDir();
+
+        return File.createTempFile("tempFile", ".jpg", storageDir);
+
+    }
+
     public void onCameraButtonClick() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Uri photoURI = null;
-        try {
-            photoURI = FileProvider.getUriForFile(this,
-                    "com.amt.postermaker.graphicdesign.flyer.bannermaker.provider",
-                    createImageFile());
-//            this.f25f = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
-            intent.putExtra("output", photoURI);
-            startActivityForResult(intent, SELECT_PICTURE_FROM_CAMERA);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+//        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//        File file = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
+//        intent.putExtra("output", Uri.fromFile(file));
+//        startActivityForResult(intent, SELECT_PICTURE_FROM_CAMERA);
+
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        Uri photoURI = null;
+//        try {
+//            photoURI = FileProvider.getUriForFile(this,
+//                    "com.amt.postermaker.graphicdesign.flyer.bannermaker.provider",
+//                    createImageFile());
+////            this.f25f = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
+//            intent.putExtra("output", photoURI);
+//            startActivityForResult(intent, SELECT_PICTURE_FROM_CAMERA);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        dispatchTakePictureIntent();
 
     }
 

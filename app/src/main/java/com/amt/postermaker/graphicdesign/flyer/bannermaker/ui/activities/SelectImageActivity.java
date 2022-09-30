@@ -106,19 +106,19 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
 
         public Fragment getItem(int num) {
             if (num == 0) {
-                SelectImageActivity.this.fragmentbackgund = new FragmentBackgrounds();
-                return SelectImageActivity.this.fragmentbackgund;
+                fragmentbackgund = new FragmentBackgrounds();
+                return fragmentbackgund;
             } else if (num == 1) {
-                SelectImageActivity.this.fragmenttexture = new FragmentTexture();
-                return SelectImageActivity.this.fragmenttexture;
+                fragmenttexture = new FragmentTexture();
+                return fragmenttexture;
             } else if (num == 2) {
-                SelectImageActivity.this.fragmentimage = new FragmentImage();
-                return SelectImageActivity.this.fragmentimage;
+                fragmentimage = new FragmentImage();
+                return fragmentimage;
             } else if (num != 3) {
                 return null;
             } else {
-                SelectImageActivity.this.fragmentcolor = new FragmentColor();
-                return SelectImageActivity.this.fragmentcolor;
+                fragmentcolor = new FragmentColor();
+                return fragmentcolor;
             }
         }
 
@@ -129,19 +129,19 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
         public CharSequence getPageTitle(int position) {
             CharSequence text = "";
             if (position == 0) {
-                return ImageUtils.getSpannableString(SelectImageActivity.this, SelectImageActivity.this.ttf, R.string.txt_defalut);
+                return ImageUtils.getSpannableString(SelectImageActivity.this, ttf, R.string.txt_defalut);
             }
             if (position == 1) {
-                return ImageUtils.getSpannableString(SelectImageActivity.this, SelectImageActivity.this.ttf, R.string.txt_backgrounds);
+                return ImageUtils.getSpannableString(SelectImageActivity.this, ttf, R.string.txt_backgrounds);
             }
             if (position == 2) {
-                return ImageUtils.getSpannableString(SelectImageActivity.this, SelectImageActivity.this.ttf, R.string.txt_texture);
+                return ImageUtils.getSpannableString(SelectImageActivity.this, ttf, R.string.txt_texture);
             }
             if (position == 3) {
-                return ImageUtils.getSpannableString(SelectImageActivity.this, SelectImageActivity.this.ttf, R.string.txt_image);
+                return ImageUtils.getSpannableString(SelectImageActivity.this, ttf, R.string.txt_image);
             }
             if (position == 4) {
-                return ImageUtils.getSpannableString(SelectImageActivity.this, SelectImageActivity.this.ttf, R.string.txt_color);
+                return ImageUtils.getSpannableString(SelectImageActivity.this, ttf, R.string.txt_color);
             }
             return text;
         }
@@ -162,8 +162,8 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
         }
         this.ttf = Constants.getTextTypeface(this);
         this.ttfHeader = Constants.getHeaderTypeface(this);
-        this.tabHost = (MaterialTabHost) findViewById(R.id.tabHost);
-        this.pager = (ViewPager) findViewById(R.id.pager);
+        this.tabHost = findViewById(R.id.tabHost);
+        this.pager = findViewById(R.id.pager);
         MaterialTab t1 = new MaterialTab(this, false);
         MaterialTab t2 = new MaterialTab(this, false);
         MaterialTab t3 = new MaterialTab(this, false);
@@ -175,13 +175,13 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
         initUI();
         this.animSlideUp = Constants.getAnimUp(this);
         this.animSlideDown = Constants.getAnimDown(this);
-        this.image_container = (RelativeLayout) findViewById(R.id.image_container);
-        this.lay_crop = (RelativeLayout) findViewById(R.id.lay_crop);
-        this.image1 = (ImageView) findViewById(R.id.image1);
-        this.image2 = (ImageView) findViewById(R.id.image2);
-        this.image3 = (ImageView) findViewById(R.id.image3);
-        this.image4 = (ImageView) findViewById(R.id.image4);
-        this.image5 = (ImageView) findViewById(R.id.image5);
+        this.image_container = findViewById(R.id.image_container);
+        this.lay_crop = findViewById(R.id.lay_crop);
+        this.image1 = findViewById(R.id.image1);
+        this.image2 = findViewById(R.id.image2);
+        this.image3 = findViewById(R.id.image3);
+        this.image4 = findViewById(R.id.image4);
+        this.image5 = findViewById(R.id.image5);
         this.image1.setOnClickListener(this);
         this.image2.setOnClickListener(this);
         this.image3.setOnClickListener(this);
@@ -207,10 +207,10 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
 
             @Override
             public void onPageSelected(int position) {
-                SelectImageActivity.this.tabHost.setSelectedNavigationItem(position);
-                if (SelectImageActivity.this.image_container.getVisibility() == View.VISIBLE) {
-                    SelectImageActivity.this.image_container.startAnimation(SelectImageActivity.this.animSlideDown);
-                    SelectImageActivity.this.image_container.setVisibility(View.GONE);
+                tabHost.setSelectedNavigationItem(position);
+                if (image_container.getVisibility() == View.VISIBLE) {
+                    image_container.startAnimation(animSlideDown);
+                    image_container.setVisibility(View.GONE);
                 }
             }
 
@@ -309,7 +309,7 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
             image.eraseColor(Color.parseColor("#" + hex1));
             btm = image;
         } else if (str.equals("Temp_Path") && FragmentBackImage.thumbnails.size() != 0) {
-            btm = (Bitmap) FragmentBackImage.thumbnails.get(i);
+            btm = FragmentBackImage.thumbnails.get(i);
         }
         for (int k = 0; k < 5; k++) {
             if (k == 0) {
@@ -350,6 +350,7 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         try {
             this.fragmentbackgund.onActivityResult(requestCode, resultCode, data);
             this.fragmenttexture.onActivityResult(requestCode, resultCode, data);
@@ -425,8 +426,8 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
         Typeface ttfHeader = Constants.getHeaderTypeface(activity);
         ((TextView) dialog.findViewById(R.id.txt_header)).setTypeface(ttfHeader);
         ((TextView) dialog.findViewById(R.id.txt1)).setText(getResources().getString(R.string.txt5) + " " + this.preferences.getString("price", "$1.99"));
-        Button btn_later = (Button) dialog.findViewById(R.id.btn_later);
-        Button btn_review = (Button) dialog.findViewById(R.id.btn_review);
+        Button btn_later = dialog.findViewById(R.id.btn_later);
+        Button btn_review = dialog.findViewById(R.id.btn_review);
         btn_review.setTypeface(ttfHeader);
         btn_later.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -435,10 +436,10 @@ public class SelectImageActivity extends FragmentActivity implements MaterialTab
         });
         btn_review.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                String url = "https://play.google.com/store/apps/details?id=" + SelectImageActivity.this.getPackageName();
+                String url = "https://play.google.com/store/apps/details?id=" + getPackageName();
                 Intent i = new Intent("android.intent.action.VIEW");
                 i.setData(Uri.parse(url));
-                SelectImageActivity.this.startActivity(i);
+                startActivity(i);
                 dialog.dismiss();
             }
         });

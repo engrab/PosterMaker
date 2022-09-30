@@ -9,7 +9,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <queries>
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -102,7 +107,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="com.amt.postermaker.graphicdesign.flyer.bannermaker.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

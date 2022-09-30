@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -23,24 +22,9 @@ import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.Constants;
 public class FragmentImage extends Fragment {
     private static final int SELECT_PICTURE_FROM_CAMERA = 9062;
     private static final int SELECT_PICTURE_FROM_GALLERY = 9072;
-    File f9f;
+    File file;
 
-    class camClick implements OnClickListener {
-        camClick() {
-        }
 
-        public void onClick(View view) {
-
-        }
-    }
-
-    class galClick implements OnClickListener {
-        galClick() {
-        }
-
-        public void onClick(View view) {
-          }
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
@@ -51,9 +35,9 @@ public class FragmentImage extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                FragmentImage.this.f9f = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
-                intent.putExtra("output", Uri.fromFile(FragmentImage.this.f9f));
-                FragmentImage.this.getActivity().startActivityForResult(intent, FragmentImage.SELECT_PICTURE_FROM_CAMERA);
+                file = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
+                intent.putExtra("output", Uri.fromFile(file));
+                getActivity().startActivityForResult(intent, FragmentImage.SELECT_PICTURE_FROM_CAMERA);
             }
         });
         view.findViewById(R.id.btn_gal).setOnClickListener(new OnClickListener() {
@@ -62,7 +46,7 @@ public class FragmentImage extends Fragment {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction("android.intent.action.GET_CONTENT");
-                FragmentImage.this.getActivity().startActivityForResult(Intent.createChooser(intent, FragmentImage.this.getString(R.string.select_picture)), FragmentImage.SELECT_PICTURE_FROM_GALLERY);
+                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), FragmentImage.SELECT_PICTURE_FROM_GALLERY);
 
             }
         });

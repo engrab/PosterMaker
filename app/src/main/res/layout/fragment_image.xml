@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
 
     <RelativeLayout
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_centerInParent="true">
+        android:background="@color/colorPrimary">
 
         <RelativeLayout
             android:id="@+id/hh"
@@ -29,20 +29,20 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:weightSum="2"
             android:layout_below="@+id/hh"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:layout_margin="6dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
             <RelativeLayout
-                android:background="@color/colorPrimary"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_marginRight="3dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="@color/colorPrimary">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -56,25 +56,25 @@
                         android:background="@drawable/camera" />
 
                     <TextView
-                        android:textSize="20sp"
-                        android:textColor="@color/white"
                         android:id="@+id/txtCam"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="@string/camera"
                         android:layout_below="@+id/btn_cam"
                         android:layout_centerHorizontal="true"
-                        android:textAllCaps="true" />
+                        android:layout_marginTop="5dp"
+                        android:text="@string/camera"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
                 </RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
-                android:background="@color/colorPrimary"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_marginLeft="3dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="@color/colorPrimary">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -88,16 +88,16 @@
                         android:background="@drawable/gallery" />
 
                     <TextView
-                        android:textSize="20sp"
-                        android:textColor="@color/white"
                         android:id="@+id/txtGal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="@string/gallery"
                         android:layout_below="@+id/btn_gal"
                         android:layout_centerHorizontal="true"
-                        android:textAllCaps="true" />
+                        android:layout_marginTop="5dp"
+                        android:text="@string/gallery"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
