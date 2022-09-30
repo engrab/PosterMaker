@@ -30,10 +30,7 @@ public class FragmentImage extends Fragment {
         }
 
         public void onClick(View view) {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            FragmentImage.this.f9f = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
-            intent.putExtra("output", Uri.fromFile(FragmentImage.this.f9f));
-            FragmentImage.this.getActivity().startActivityForResult(intent, FragmentImage.SELECT_PICTURE_FROM_CAMERA);
+
         }
     }
 
@@ -42,11 +39,7 @@ public class FragmentImage extends Fragment {
         }
 
         public void onClick(View view) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction("android.intent.action.GET_CONTENT");
-            FragmentImage.this.getActivity().startActivityForResult(Intent.createChooser(intent, FragmentImage.this.getString(R.string.select_picture).toString()), FragmentImage.SELECT_PICTURE_FROM_GALLERY);
-        }
+          }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,8 +47,25 @@ public class FragmentImage extends Fragment {
         StrictMode.VmPolicy.Builder builder= new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        ((Button) view.findViewById(R.id.btn_cam)).setOnClickListener(new camClick());
-        ((Button) view.findViewById(R.id.btn_gal)).setOnClickListener(new galClick());
+        view.findViewById(R.id.btn_cam).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                FragmentImage.this.f9f = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
+                intent.putExtra("output", Uri.fromFile(FragmentImage.this.f9f));
+                FragmentImage.this.getActivity().startActivityForResult(intent, FragmentImage.SELECT_PICTURE_FROM_CAMERA);
+            }
+        });
+        view.findViewById(R.id.btn_gal).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction("android.intent.action.GET_CONTENT");
+                FragmentImage.this.getActivity().startActivityForResult(Intent.createChooser(intent, FragmentImage.this.getString(R.string.select_picture)), FragmentImage.SELECT_PICTURE_FROM_GALLERY);
+
+            }
+        });
         ((TextView) view.findViewById(R.id.textH)).setTypeface(Constants.getHeaderTypeface(getActivity()));
         ((TextView) view.findViewById(R.id.txtCam)).setTypeface(Constants.getTextTypeface(getActivity()));
         ((TextView) view.findViewById(R.id.txtGal)).setTypeface(Constants.getTextTypeface(getActivity()));

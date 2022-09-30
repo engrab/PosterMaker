@@ -1,5 +1,6 @@
 package com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +10,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
@@ -24,7 +26,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -50,15 +52,30 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.adapter.AdapterAssetsGridMain;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.adapter.AdapterSticker;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.backTask.BlurOperationAsync;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.db.DatabaseHandler;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.interfaces.GetSnapListener;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.interfaces.OnSetImageSticker;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.listener.GetColorListener;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.listener.ListenerOnTouchEvent;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.models.BitmapDataObject;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.fragments.ListFragment;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.Constants;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.GPUImageFilterTools.FilterAdjuster;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.ImageUtils;
+import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.TemplateInfo;
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.android.gms.common.Scopes;
 import com.msl.demo.view.ComponentInfo;
@@ -80,30 +97,22 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import jp.co.cyberagent.android.gpuimage.GPUImage;
 import jp.co.cyberagent.android.gpuimage.GPUImageGaussianBlurFilter;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.adapter.AdapterAssetsGridMain;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.adapter.AdapterSticker;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.models.BitmapDataObject;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.backTask.BlurOperationAsync;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.db.DatabaseHandler;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.listener.ListenerOnTouchEvent;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.TemplateInfo;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.interfaces.GetSnapListener;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.GPUImageFilterTools.FilterAdjuster;
-import com.amt.postermaker.graphicdesign.flyer.bannermaker.utility.ImageUtils;
-
 import yuku.ambilwarna.AmbilWarnaDialog;
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
 
 public class PosterActivity extends FragmentActivity implements OnClickListener, OnSeekBarChangeListener, TouchEventListener, AutofitTextRel.TouchEventListener, GetSnapListener, OnSetImageSticker, GetColorListener {
+    public static final int CAMERA_PERM_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE = 102;
     private static final int OPEN_CUSTOM_ACITIVITY = 4;
     private static final int SELECT_PICTURE_FROM_CAMERA = 905;
     private static final int SELECT_PICTURE_FROM_GALLERY = 907;
@@ -117,53 +126,38 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     public static boolean isUpadted = false;
     public static boolean isUpdated = false;
     public static Bitmap withoutWatermark;
+    private final View[] layArr = new View[5];
+    public ListFragment listFragment;
+    String currentPhotoPath;
     boolean OneShow = true;
-    private ViewPager _mViewPager;
     AdapterAssetsGridMain adapter;
-    private RelativeLayout add_sticker;
-    private RelativeLayout add_text;
     int alpha = 80;
-    private SeekBar alphaSeekbar;
-    private Animation animSlideDown;
-    private Animation animSlideUp;
     ImageView background_blur;
     ImageView background_img;
     int bgAlpha = 0;
     int bgColor = 0;
     String bgDrawable = "0";
     LinearLayout bgShow;
-    private Bitmap bitmap;
     ImageButton btn_bck1;
-    private RelativeLayout center_rel;
     boolean checkMemory;
     LinearLayout colorShow;
     String color_Type;
     LinearLayout controlsShow;
     LinearLayout controlsShowStkr;
-    private int curTileId = 0;
     String dev_name = "Photo+Cool+Apps";
     ProgressDialog dialogIs;
     boolean dialogShow = true;
     float distance;
     int distanceScroll;
     int dsfc;
-    private boolean editMode = false;
     Editor editor;
-    private File f25f = null;
-    private String filename;
-    private View focusedView;
     String fontName = "";
     LinearLayout fontsShow;
     String frame_Name = "";
     ImageView guideline;
     String hex;
-    private LineColorPicker horizontalPicker;
-    private LineColorPicker horizontalPickerColor;
-    private float hr = 1.0f;
-    private SeekBar hueSeekbar;
     int[] imageId = new int[]{R.drawable.btxt0, R.drawable.btxt1, R.drawable.btxt2, R.drawable.btxt3, R.drawable.btxt4, R.drawable.btxt5, R.drawable.btxt6, R.drawable.btxt7, R.drawable.btxt8, R.drawable.btxt9, R.drawable.btxt10, R.drawable.btxt11, R.drawable.btxt12, R.drawable.btxt13, R.drawable.btxt14, R.drawable.btxt15, R.drawable.btxt16, R.drawable.btxt17, R.drawable.btxt18, R.drawable.btxt19, R.drawable.btxt20, R.drawable.btxt21, R.drawable.btxt22, R.drawable.btxt23, R.drawable.btxt24};
     ImageView img_oK;
-    private View[] layArr = new View[5];
     RelativeLayout lay_color;
     LinearLayout lay_colorOacity;
     RelativeLayout lay_colorOpacity;
@@ -171,28 +165,20 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     LinearLayout lay_dupliStkr;
     LinearLayout lay_dupliText;
     LinearLayout lay_edit;
-    private LinearLayout lay_effects;
     RelativeLayout lay_filter;
     RelativeLayout lay_handletails;
     RelativeLayout lay_hue;
     ScrollView lay_scroll;
     RelativeLayout lay_sticker;
-    private LinearLayout lay_textEdit;
-    private RelativeLayout lay_touchremove;
-    private LinearLayout logo_ll;
-    private RelativeLayout main_rel;
-    private int min = 0;
     Options options = new Options();
     String overlay_Name = "";
     int overlay_blur;
     int overlay_opacty;
     String[] pallete = new String[]{"#ffffff", "#cccccc", "#999999", "#666666", "#333333", "#000000", "#ffee90", "#ffd700", "#daa520", "#b8860b", "#ccff66", "#adff2f", "#00fa9a", "#00ff7f", "#00ff00", "#32cd32", "#3cb371", "#99cccc", "#66cccc", "#339999", "#669999", "#006666", "#336666", "#ffcccc", "#ff9999", "#ff6666", "#ff3333", "#ff0033", "#cc0033"};
     float parentY;
-    private LineColorPicker pickerBg;
     String position;
     SharedPreferences preferences;
     SharedPreferences prefs;
-    private int processs;
     String profile;
     String ratio;
     RelativeLayout rellative;
@@ -200,17 +186,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     LinearLayout sadowShow;
     float screenHeight;
     float screenWidth;
-    private SeekBar seek;
-    private SeekBar seekBar3;
-    private SeekBar seekBar_shadow;
-    private int seekValue = 90;
-    private SeekBar seek_blur;
-    private SeekBar seek_tailys;
-    private LinearLayout seekbar_container;
-    private RelativeLayout select_backgnd;
-    private RelativeLayout select_effect;
     int shadowColor = ViewCompat.MEASURED_STATE_MASK;
-    private LineColorPicker shadowPickerColor;
     int shadowProg = 0;
     RelativeLayout shape_rel;
     boolean showtailsSeek = false;
@@ -221,386 +197,62 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     PagerSlidingTabStrip tabs;
     String temp_Type = "";
     String temp_path = "";
-    private List<TemplateInfo> templateList = new ArrayList();
     int template_id;
     int textColorSet = Color.parseColor("#ffffff");
     boolean touchChange = false;
     ImageView trans_img;
-    private Typeface ttf;
-    private Typeface ttfHeader;
     HashMap<Integer, Object> txtShapeList;
-    private RelativeLayout txt_stkr_rel;
     ArrayList<String> uriArry = new ArrayList();
-    private RelativeLayout user_image;
     SeekBar verticalSeekBar = null;
-    private float wr = 1.0f;
-    public ListFragment listFragment;
-
-    class main_layout_runnable implements Runnable {
-
-        class layout_ implements Runnable {
-            layout_() {
-            }
-            public void run() {
-                int[] los1 = new int[2];
-                PosterActivity.this.lay_scroll.getLocationOnScreen(los1);
-                PosterActivity.this.parentY = (float) los1[1];
-            }
-        }
-        main_layout_runnable() { }
-        public void run() {
-            PosterActivity.this.guideline.setImageBitmap(Constants.guidelines_bitmap(PosterActivity.this, PosterActivity.this.main_rel.getWidth(), PosterActivity.this.main_rel.getHeight()));
-            PosterActivity.this.lay_scroll.post(new layout_());
-        }
-    }
-    
-    public class BlurOperationTwoAsync extends AsyncTask<String, Void, String> {
-        ImageView background_blur;
-        Bitmap btmp;
-        Activity context;
-
-        public BlurOperationTwoAsync(PosterActivity posterActivity, Bitmap bit, ImageView background_blur) {
-            this.context = posterActivity;
-            this.btmp = bit;
-            this.background_blur = background_blur;
-        }
-
-        protected void onPreExecute() {
-        }
-
-        protected String doInBackground(String... params) {
-            this.btmp = PosterActivity.this.gaussinBlur(this.context, this.btmp);
-            return "yes";
-        }
-
-        protected void onPostExecute(String result) {
-            this.background_blur.setImageBitmap(this.btmp);
-            PosterActivity.this.txt_stkr_rel.removeAllViews();
-            if (PosterActivity.this.temp_path.equals("")) {
-                new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
-                return;
-            }
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
-            if (file.exists()) {
-                if (file.listFiles().length >= 7) {
-                    new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
-                } else if (new File(PosterActivity.this.temp_path).exists()) {
-                    new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
-                } else {
-                    new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
-                }
-            } else if (new File(PosterActivity.this.temp_path).exists()) {
-                new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
-            } else {
-                new LordStickersAsync().execute(new String[]{"" + PosterActivity.this.template_id});
-            }
-        }
-    }
-
-    class change_color_listener implements OnColorChangedListener {
-        change_color_listener() {
-        }
-
-        public void onColorChanged(int c) {
-            PosterActivity.this.updateBgColor(c);
-        }
-    }
-
-
-    private class LordStickersAsync extends AsyncTask<String, String, Boolean> {
-        private LordStickersAsync() {
-        }
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected Boolean doInBackground(String... params) {
-            DatabaseHandler dh = DatabaseHandler.getDbHandler(PosterActivity.this.getApplicationContext());
-            ArrayList<ComponentInfo> shapeInfoList = dh.getComponentInfoList(PosterActivity.this.template_id, "SHAPE");
-            ArrayList<TextInfo> textInfoList = dh.getTextInfoList(PosterActivity.this.template_id);
-            ArrayList<ComponentInfo> stickerInfoList = dh.getComponentInfoList(PosterActivity.this.template_id, "STICKER");
-            dh.close();
-            PosterActivity.this.txtShapeList = new HashMap();
-            Iterator it = textInfoList.iterator();
-            while (it.hasNext()) {
-                TextInfo ti = (TextInfo) it.next();
-                PosterActivity.this.txtShapeList.put(Integer.valueOf(ti.getORDER()), ti);
-            }
-            it = stickerInfoList.iterator();
-            while (it.hasNext()) {
-                ComponentInfo ci = (ComponentInfo) it.next();
-                PosterActivity.this.txtShapeList.put(Integer.valueOf(ci.getORDER()), ci);
-            }
-            return Boolean.valueOf(true);
-        }
-
-        protected void onPostExecute(Boolean isDownloaded) {
-            super.onPostExecute(isDownloaded);
-            if (PosterActivity.this.txtShapeList.size() == 0) {
-                PosterActivity.this.dialogIs.dismiss();
-            }
-            List sortedKeys = new ArrayList(PosterActivity.this.txtShapeList.keySet());
-            Collections.sort(sortedKeys);
-            int len = sortedKeys.size();
-            for (int j = 0; j < len; j++) {
-                Object obj = PosterActivity.this.txtShapeList.get(sortedKeys.get(j));
-                PosterActivity posterActivity;
-                if (obj instanceof ComponentInfo) {
-                    String stkr_path = ((ComponentInfo) obj).getSTKR_PATH();
-                    ResizableStickerView riv;
-                    if (stkr_path.equals("")) {
-                        riv = new ResizableStickerView(PosterActivity.this);
-                        PosterActivity.this.txt_stkr_rel.addView(riv);
-                        riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
-                        riv.setComponentInfo((ComponentInfo) obj);
-                        riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
-                        riv.setOnTouchCallbackListener(PosterActivity.this);
-                        riv.setBorderVisibility(false);
-                        posterActivity = PosterActivity.this;
-                        posterActivity.sizeFull++;
-                    } else {
-                        File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
-                        if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
-                            Log.d("", "Can't create directory to save image.");
-                            Toast.makeText(PosterActivity.this, PosterActivity.this.getResources().getString(R.string.create_dir_err), Toast.LENGTH_SHORT).show();
-                            return;
-                        } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1").exists()) {
-                           File file1 = new File(stkr_path);
-                            if (file1.exists()) {
-                                riv = new ResizableStickerView(PosterActivity.this);
-                                PosterActivity.this.txt_stkr_rel.addView(riv);
-                                riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
-                                riv.setComponentInfo((ComponentInfo) obj);
-                                riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
-                                riv.setOnTouchCallbackListener(PosterActivity.this);
-                                riv.setBorderVisibility(false);
-                                posterActivity = PosterActivity.this;
-                                posterActivity.sizeFull++;
-                            } else if (file1.getName().replace(".png", "").length() < 7) {
-                                PosterActivity.this.dialogShow = false;
-                            } else {
-                                if (PosterActivity.this.OneShow) {
-                                    PosterActivity.this.dialogShow = true;
-                                    PosterActivity.this.errorDialogTempInfo();
-                                    PosterActivity.this.OneShow = false;
-                                }
-                                posterActivity = PosterActivity.this;
-                                posterActivity.sizeFull++;
-                            }
-                        } else {
-                          File  file1 = new File(stkr_path);
-                            if (file1.exists()) {
-                                riv = new ResizableStickerView(PosterActivity.this);
-                                PosterActivity.this.txt_stkr_rel.addView(riv);
-                                riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
-                                riv.setComponentInfo((ComponentInfo) obj);
-                                riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
-                                riv.setOnTouchCallbackListener(PosterActivity.this);
-                                riv.setBorderVisibility(false);
-                                posterActivity = PosterActivity.this;
-                                posterActivity.sizeFull++;
-                            } else if (file1.getName().replace(".png", "").length() < 7) {
-                                PosterActivity.this.dialogShow = false;
-                            } else {
-                                if (PosterActivity.this.OneShow) {
-                                    PosterActivity.this.dialogShow = true;
-                                    PosterActivity.this.errorDialogTempInfo();
-                                    PosterActivity.this.OneShow = false;
-                                }
-                                posterActivity = PosterActivity.this;
-                                posterActivity.sizeFull++;
-                            }
-                        }
-                    }
-                } else {
-                    AutofitTextRel rl = new AutofitTextRel(PosterActivity.this);
-                    PosterActivity.this.txt_stkr_rel.addView(rl);
-                    rl.setTextInfo((TextInfo) obj, false);
-                    rl.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
-                    rl.setOnTouchCallbackListener(PosterActivity.this);
-                    rl.setBorderVisibility(false);
-                    PosterActivity.this.fontName = ((TextInfo) obj).getFONT_NAME();
-                    PosterActivity.this.tColor = ((TextInfo) obj).getTEXT_COLOR();
-                    PosterActivity.this.shadowColor = ((TextInfo) obj).getSHADOW_COLOR();
-                    PosterActivity.this.shadowProg = ((TextInfo) obj).getSHADOW_PROG();
-                    PosterActivity.this.tAlpha = ((TextInfo) obj).getTEXT_ALPHA();
-                    PosterActivity.this.bgDrawable = ((TextInfo) obj).getBG_DRAWABLE();
-                    PosterActivity.this.bgAlpha = ((TextInfo) obj).getBG_ALPHA();
-                    PosterActivity.this.rotation = ((TextInfo) obj).getROTATION();
-                    PosterActivity.this.bgColor = ((TextInfo) obj).getBG_COLOR();
-                    posterActivity = PosterActivity.this;
-                    posterActivity.sizeFull++;
-                    Log.e("details is", "" + ((TextInfo) obj).getWIDTH() + " ," + ((TextInfo) obj).getHEIGHT() + " ," + ((TextInfo) obj).getTEXT());
-                }
-            }
-            if (PosterActivity.this.txtShapeList.size() == PosterActivity.this.sizeFull && PosterActivity.this.dialogShow) {
-                PosterActivity.this.dialogIs.dismiss();
-            }
-        }
-    }
-
-    private class LordTemplateAsync extends AsyncTask<String, String, Boolean> {
-        int indx;
-        String postion;
-
-        private LordTemplateAsync() {
-            this.indx = 0;
-            this.postion = "1";
-        }
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-            PosterActivity.this.dialogIs = new ProgressDialog(PosterActivity.this);
-            PosterActivity.this.dialogIs.setMessage(PosterActivity.this.getResources().getString(R.string.plzwait));
-            PosterActivity.this.dialogIs.setCancelable(false);
-            PosterActivity.this.dialogIs.show();
-        }
-
-        protected Boolean doInBackground(String... params) {
-            this.indx = Integer.parseInt(params[0]);
-            TemplateInfo templateInfo = (TemplateInfo) PosterActivity.this.templateList.get(this.indx);
-            PosterActivity.this.template_id = templateInfo.getTEMPLATE_ID();
-            PosterActivity.this.frame_Name = templateInfo.getFRAME_NAME();
-            PosterActivity.this.temp_path = templateInfo.getTEMP_PATH();
-            PosterActivity.this.ratio = templateInfo.getRATIO();
-            PosterActivity.this.profile = templateInfo.getPROFILE_TYPE();
-            String seekValue1 = templateInfo.getSEEK_VALUE();
-            PosterActivity.this.hex = templateInfo.getTEMPCOLOR();
-            PosterActivity.this.overlay_Name = templateInfo.getOVERLAY_NAME();
-            PosterActivity.this.overlay_opacty = templateInfo.getOVERLAY_OPACITY();
-            PosterActivity.this.overlay_blur = templateInfo.getOVERLAY_BLUR();
-            PosterActivity.this.seekValue = Integer.parseInt(seekValue1);
-            return Boolean.valueOf(true);
-        }
-
-        protected void onPostExecute(Boolean isDownloaded) {
-            super.onPostExecute(isDownloaded);
-            if (PosterActivity.this.profile.equals("Background")) {
-                this.postion = PosterActivity.this.frame_Name.replace("b", "");
-            } else if (!PosterActivity.this.profile.equals("Color")) {
-                if (PosterActivity.this.profile.equals("Texture")) {
-                    this.postion = PosterActivity.this.frame_Name.replace("t", "");
-                    PosterActivity.this.seek_tailys.setProgress(PosterActivity.this.seekValue);
-                } else if (!(!PosterActivity.this.profile.equals("Temp_Path") || PosterActivity.this.frame_Name.equals("") || PosterActivity.this.ratio.equals(""))) {
-                    this.postion = PosterActivity.this.frame_Name.replace("b", "");
-                }
-            }
-            if (!PosterActivity.this.overlay_Name.equals("")) {
-                PosterActivity.this.setBitmapOverlay(BitmapFactory.decodeResource(PosterActivity.this.getResources(), PosterActivity.this.getResources().getIdentifier(PosterActivity.this.overlay_Name, "drawable", PosterActivity.this.getPackageName())));
-            }
-            PosterActivity.this.seek.setProgress(PosterActivity.this.overlay_opacty);
-            PosterActivity.this.seek_blur.setProgress(PosterActivity.this.overlay_blur);
-            String vv = String.valueOf(Integer.parseInt(this.postion));
-            if (((TemplateInfo) PosterActivity.this.templateList.get(this.indx)).getTYPE().equals("USER")) {
-                PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
-            }
-            if (((TemplateInfo) PosterActivity.this.templateList.get(this.indx)).getTYPE().equals("FREESTYLE")) {
-                PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
-            }
-            if (((TemplateInfo) PosterActivity.this.templateList.get(this.indx)).getTYPE().equals("FRIDAY")) {
-                PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
-            }
-        }
-    }
-
-    private class SaveStickersAsync extends AsyncTask<String, String, Boolean> {
-        Object objk;
-        String stkr_path;
-
-        public SaveStickersAsync(Object obj1) {
-            this.objk = obj1;
-        }
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected Boolean doInBackground(String... params) {
-            String stkrName = params[0];
-            this.stkr_path = ((ComponentInfo) this.objk).getSTKR_PATH();
-            try {
-                Bitmap bitmap = BitmapFactory.decodeResource(PosterActivity.this.getResources(), PosterActivity.this.getResources().getIdentifier(stkrName, "drawable", PosterActivity.this.getPackageName()));
-                if (bitmap != null) {
-                    return Boolean.valueOf(Constants.saveBitmapObject(PosterActivity.this, bitmap, this.stkr_path));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return Boolean.valueOf(false);
-        }
-
-        protected void onPostExecute(Boolean isDownloaded) {
-            super.onPostExecute(isDownloaded);
-            PosterActivity posterActivity = PosterActivity.this;
-            posterActivity.sizeFull++;
-            if (PosterActivity.this.txtShapeList.size() == PosterActivity.this.sizeFull) {
-                PosterActivity.this.dialogShow = true;
-            }
-            if (isDownloaded.booleanValue()) {
-                ResizableStickerView riv = new ResizableStickerView(PosterActivity.this);
-                PosterActivity.this.txt_stkr_rel.addView(riv);
-                riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
-                riv.setComponentInfo((ComponentInfo) this.objk);
-                riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
-                riv.setOnTouchCallbackListener(PosterActivity.this);
-                riv.setBorderVisibility(false);
-            }
-            if (PosterActivity.this.dialogShow) {
-                PosterActivity.this.dialogIs.dismiss();
-            }
-        }
-    }
-
-    private class SavebackgrundAsync extends AsyncTask<String, String, Boolean> {
-        private String crted;
-        private String profile;
-        private String ratio;
-
-        private SavebackgrundAsync() {
-        }
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected Boolean doInBackground(String... params) {
-            String stkrName = params[0];
-            this.ratio = params[1];
-            this.profile = params[2];
-            this.crted = params[3];
-            try {
-                Bitmap bitmap = BitmapFactory.decodeResource(PosterActivity.this.getResources(), PosterActivity.this.getResources().getIdentifier(stkrName, "drawable", PosterActivity.this.getPackageName()));
-                if (bitmap != null) {
-                    return Boolean.valueOf(Constants.saveBitmapObject(PosterActivity.this, bitmap, PosterActivity.this.temp_path));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return Boolean.valueOf(false);
-        }
-
-        protected void onPostExecute(Boolean isDownloaded) {
-            super.onPostExecute(isDownloaded);
-            if (isDownloaded.booleanValue()) {
-                try {
-                    PosterActivity.this.bitmapRatio(this.ratio, this.profile, ImageUtils.getResampleImageBitmap(Uri.parse(PosterActivity.this.temp_path), PosterActivity.this, (int) (PosterActivity.this.screenWidth > PosterActivity.this.screenHeight ? PosterActivity.this.screenWidth : PosterActivity.this.screenHeight)), this.crted);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                PosterActivity.this.txt_stkr_rel.removeAllViews();
-            }
-        }
-    }
-
     Button btn_layControls;
     FrameLayout lay_container;
+    private ViewPager _mViewPager;
+    private RelativeLayout add_sticker;
+    private RelativeLayout add_text;
+    private SeekBar alphaSeekbar;
+    private Animation animSlideDown;
+    private Animation animSlideUp;
+    private Bitmap bitmap;
+    private RelativeLayout center_rel;
+    private int curTileId = 0;
+    private boolean editMode = false;
+    private File f25f = null;
+    private String filename;
+    private View focusedView;
+    private LineColorPicker horizontalPicker;
+    private LineColorPicker horizontalPickerColor;
+    private float hr = 1.0f;
+    private SeekBar hueSeekbar;
+    private LinearLayout lay_effects;
+    private LinearLayout lay_textEdit;
+    private RelativeLayout lay_touchremove;
+    private LinearLayout logo_ll;
+    private RelativeLayout main_rel;
+    private int min = 0;
+    private LineColorPicker pickerBg;
+    private int processs;
+    private SeekBar seek;
+    private SeekBar seekBar3;
+    private SeekBar seekBar_shadow;
+    private int seekValue = 90;
+    private SeekBar seek_blur;
+    private SeekBar seek_tailys;
+    private LinearLayout seekbar_container;
+    private RelativeLayout select_backgnd;
+    private RelativeLayout select_effect;
+    private LineColorPicker shadowPickerColor;
+    private List<TemplateInfo> templateList = new ArrayList();
+    private Typeface ttf;
+    private Typeface ttfHeader;
+    private RelativeLayout txt_stkr_rel;
+    private RelativeLayout user_image;
+    private float wr = 1.0f;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(1024, 1024);
         setContentView(R.layout.activity_poster);
-        StrictMode.VmPolicy.Builder builder= new StrictMode.VmPolicy.Builder();
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         intilization();
         f24c = this;
@@ -646,7 +298,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             final int intExtra = getIntent().getIntExtra("position", 0);
             this.center_rel.post(new Runnable() {
                 public void run() {
-                    new LordTemplateAsync().execute(new String[]{"" + intExtra});
+                    new LordTemplateAsync().execute("" + intExtra);
                 }
             });
         }
@@ -675,16 +327,16 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.horizontalPickerColor.setOnColorChangedListener(color_change_listener);
         this.shadowPickerColor.setOnColorChangedListener(color_change_listener);
         this.pickerBg.setOnColorChangedListener(color_change_listener);
-        this.guideline = (ImageView) findViewById(R.id.guidelines);
+        this.guideline = findViewById(R.id.guidelines);
         this.select_backgnd.setBackgroundResource(R.drawable.overlay);
         this.select_effect.setBackgroundResource(R.drawable.overlay);
         this.user_image.setBackgroundResource(R.drawable.overlay);
         this.add_text.setBackgroundResource(R.drawable.overlay);
         this.add_sticker.setBackgroundResource(R.drawable.overlay);
-        this.rellative = (RelativeLayout) findViewById(R.id.rellative);
-        this.btn_bck1 = (ImageButton) findViewById(R.id.btn_bck1);
+        this.rellative = findViewById(R.id.rellative);
+        this.btn_bck1 = findViewById(R.id.btn_bck1);
         this.btn_bck1.setOnClickListener(this);
-        this.lay_scroll = (ScrollView) findViewById(R.id.lay_scroll);
+        this.lay_scroll = findViewById(R.id.lay_scroll);
         this.lay_scroll.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -704,15 +356,15 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         ((TextView) findViewById(R.id.txt_shadow)).setTypeface(this.ttf);
         ((TextView) findViewById(R.id.txt_bg)).setTypeface(this.ttf);
         ((TextView) findViewById(R.id.txt_controls)).setTypeface(this.ttf);
-        ImageButton btnRight = (ImageButton) findViewById(R.id.btnRight);
-        ImageButton btnUp = (ImageButton) findViewById(R.id.btnUp);
-        ImageButton btnDown = (ImageButton) findViewById(R.id.btnDown);
-        ImageButton btnLeftS = (ImageButton) findViewById(R.id.btnLeftS);
-        ImageButton btnRightS = (ImageButton) findViewById(R.id.btnRightS);
-        ImageButton btnUpS = (ImageButton) findViewById(R.id.btnUpS);
-        ImageButton btnDownS = (ImageButton) findViewById(R.id.btnDownS);
+        ImageButton btnRight = findViewById(R.id.btnRight);
+        ImageButton btnUp = findViewById(R.id.btnUp);
+        ImageButton btnDown = findViewById(R.id.btnDown);
+        ImageButton btnLeftS = findViewById(R.id.btnLeftS);
+        ImageButton btnRightS = findViewById(R.id.btnRightS);
+        ImageButton btnUpS = findViewById(R.id.btnUpS);
+        ImageButton btnDownS = findViewById(R.id.btnDownS);
 
-        ((ImageButton) findViewById(R.id.btnLeft)).setOnTouchListener(new ListenerOnTouchEvent(200, 100, new OnClickListener() {
+        findViewById(R.id.btnLeft).setOnTouchListener(new ListenerOnTouchEvent(200, 100, new OnClickListener() {
             @Override
             public void onClick(View view) {
                 PosterActivity.this.updatePositionSticker("decX");
@@ -743,14 +395,12 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         }));
 
 
-
         btnLeftS.setOnTouchListener(new ListenerOnTouchEvent(200, 100, new OnClickListener() {
             @Override
             public void onClick(View view) {
                 PosterActivity.this.updatePositionSticker("decX");
             }
         }));
-
 
 
         btnRightS.setOnTouchListener(new ListenerOnTouchEvent(200, 100, new OnClickListener() {
@@ -770,13 +420,11 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         }));
 
 
-
-
         btnDownS.setOnTouchListener(new ListenerOnTouchEvent(200, 100, new OnClickListener() {
             @Override
             public void onClick(View view) {
                 PosterActivity.this.updatePositionSticker("incrY");
-                
+
             }
         }));
 
@@ -788,7 +436,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         if (!profile.equals("no")) {
             if (profile.equals("Background")) {
                 this.lay_handletails.setVisibility(View.GONE);
-                this.frame_Name = "b" + String.valueOf(i);
+                this.frame_Name = "b" + i;
                 this.temp_path = "";
                 Options bfo = new Options();
                 bfo.inJustDecodeBounds = true;
@@ -800,7 +448,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 return;
             }
             if (profile.equals("Texture")) {
-                this.frame_Name = "t" + String.valueOf(i);
+                this.frame_Name = "t" + i;
                 this.temp_path = "";
                 this.curTileId = Constants.Imageid1[i];
                 this.showtailsSeek = true;
@@ -822,11 +470,11 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 if (ratio.equals("")) {
                     this.frame_Name = "";
                 } else {
-                    this.frame_Name = "b" + String.valueOf(i);
+                    this.frame_Name = "b" + i;
                 }
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
                 if (file.exists() || file.mkdirs()) {
-                    File file2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name)+"/.Poster Maker Stickers/category1");
+                    File file2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
                     if (file2.exists()) {
                     }
                     if (crted.equals("nonCreated")) {
@@ -834,7 +482,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                         for (File absolutePath22 : file2.listFiles()) {
                             this.uriArry.add(absolutePath22.getAbsolutePath());
                         }
-                        this.temp_path = (String) this.uriArry.get(i);
+                        this.temp_path = this.uriArry.get(i);
                     }
                     File file1 = new File(this.temp_path);
                     if (file1.exists()) {
@@ -848,7 +496,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                     }
                     if (!ratio.equals("")) {
                         String draName = file1.getName().replace(".png", "");
-                        new SavebackgrundAsync().execute(new String[]{draName, ratio, profile, crted});
+                        new SavebackgrundAsync().execute(draName, ratio, profile, crted);
                         return;
                     } else if (this.OneShow) {
                         errorDialogTempInfo();
@@ -883,7 +531,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         if (!crted.equals("created")) {
             setImageBitmapAndResizeLayout(bit, "nonCreated");
         } else if (profile.equals("Texture")) {
-            setImageBitmapAndResizeLayout(Constants.getTiledBitmap((Activity) this, this.curTileId, bit, this.seek_tailys), "created");
+            setImageBitmapAndResizeLayout(Constants.getTiledBitmap(this, this.curTileId, bit, this.seek_tailys), "created");
         } else {
             setImageBitmapAndResizeLayout(bit, "created");
         }
@@ -920,7 +568,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.background_img.setImageBitmap(bit);
         imgBtmap = bit;
         this.main_rel.post(new main_layout_runnable());
-        
+
         try {
             float ow = (float) bit.getWidth();
             float oh = (float) bit.getHeight();
@@ -937,50 +585,50 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             this.background_blur.setVisibility(View.GONE);
         }
         if (creted.equals("created")) {
-            new BlurOperationTwoAsync(this, bit, this.background_blur).execute(new String[]{""});
+            new BlurOperationTwoAsync(this, bit, this.background_blur).execute("");
             return;
         }
-        new BlurOperationAsync(this, bit, this.background_blur).execute(new String[]{""});
+        new BlurOperationAsync(this, bit, this.background_blur).execute("");
     }
 
     private void intilization() {
         this.ttf = Constants.getTextTypeface(this);
-        this.center_rel = (RelativeLayout) findViewById(R.id.center_rel);
-        this.lay_touchremove = (RelativeLayout) findViewById(R.id.lay_touchremove);
-        this.main_rel = (RelativeLayout) findViewById(R.id.main_rel);
-        this.background_img = (ImageView) findViewById(R.id.background_img);
-        this.background_blur = (ImageView) findViewById(R.id.background_blur);
-        this.txt_stkr_rel = (RelativeLayout) findViewById(R.id.txt_stkr_rel);
-        this.user_image = (RelativeLayout) findViewById(R.id.user_image);
-        this.select_backgnd = (RelativeLayout) findViewById(R.id.select_backgnd);
-        this.select_effect = (RelativeLayout) findViewById(R.id.select_effect);
-        this.add_sticker = (RelativeLayout) findViewById(R.id.add_sticker);
-        this.add_text = (RelativeLayout) findViewById(R.id.add_text);
-        this.lay_effects = (LinearLayout) findViewById(R.id.lay_effects);
-        this.lay_sticker = (RelativeLayout) findViewById(R.id.lay_sticker);
-        this.lay_handletails = (RelativeLayout) findViewById(R.id.lay_handletails);
-        this.seekbar_container = (LinearLayout) findViewById(R.id.seekbar_container);
-        this.shape_rel = (RelativeLayout) findViewById(R.id.shape_rel);
-        this.seek_tailys = (SeekBar) findViewById(R.id.seek_tailys);
-        this.alphaSeekbar = (SeekBar) findViewById(R.id.alpha_seekBar);
-        this.seekBar3 = (SeekBar) findViewById(R.id.seekBar3);
-        this.seekBar_shadow = (SeekBar) findViewById(R.id.seekBar_shadow);
-        this.hueSeekbar = (SeekBar) findViewById(R.id.hue_seekBar);
-        this.trans_img = (ImageView) findViewById(R.id.trans_img);
+        this.center_rel = findViewById(R.id.center_rel);
+        this.lay_touchremove = findViewById(R.id.lay_touchremove);
+        this.main_rel = findViewById(R.id.main_rel);
+        this.background_img = findViewById(R.id.background_img);
+        this.background_blur = findViewById(R.id.background_blur);
+        this.txt_stkr_rel = findViewById(R.id.txt_stkr_rel);
+        this.user_image = findViewById(R.id.user_image);
+        this.select_backgnd = findViewById(R.id.select_backgnd);
+        this.select_effect = findViewById(R.id.select_effect);
+        this.add_sticker = findViewById(R.id.add_sticker);
+        this.add_text = findViewById(R.id.add_text);
+        this.lay_effects = findViewById(R.id.lay_effects);
+        this.lay_sticker = findViewById(R.id.lay_sticker);
+        this.lay_handletails = findViewById(R.id.lay_handletails);
+        this.seekbar_container = findViewById(R.id.seekbar_container);
+        this.shape_rel = findViewById(R.id.shape_rel);
+        this.seek_tailys = findViewById(R.id.seek_tailys);
+        this.alphaSeekbar = findViewById(R.id.alpha_seekBar);
+        this.seekBar3 = findViewById(R.id.seekBar3);
+        this.seekBar_shadow = findViewById(R.id.seekBar_shadow);
+        this.hueSeekbar = findViewById(R.id.hue_seekBar);
+        this.trans_img = findViewById(R.id.trans_img);
         this.alphaSeekbar.setOnSeekBarChangeListener(this);
         this.seekBar3.setOnSeekBarChangeListener(this);
         this.seekBar_shadow.setOnSeekBarChangeListener(this);
         this.hueSeekbar.setOnSeekBarChangeListener(this);
         this.seek_tailys.setOnSeekBarChangeListener(this);
-        this.seek = (SeekBar) findViewById(R.id.seek);
-        this.lay_filter = (RelativeLayout) findViewById(R.id.lay_filter);
-        this.lay_dupliText = (LinearLayout) findViewById(R.id.lay_dupliText);
-        this.lay_dupliStkr = (LinearLayout) findViewById(R.id.lay_dupliStkr);
-        this.lay_edit = (LinearLayout) findViewById(R.id.lay_edit);
+        this.seek = findViewById(R.id.seek);
+        this.lay_filter = findViewById(R.id.lay_filter);
+        this.lay_dupliText = findViewById(R.id.lay_dupliText);
+        this.lay_dupliStkr = findViewById(R.id.lay_dupliStkr);
+        this.lay_edit = findViewById(R.id.lay_edit);
         this.lay_dupliText.setOnClickListener(this);
         this.lay_dupliStkr.setOnClickListener(this);
         this.lay_edit.setOnClickListener(this);
-        this.seek_blur = (SeekBar) findViewById(R.id.seek_blur);
+        this.seek_blur = findViewById(R.id.seek_blur);
         this.trans_img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.o1));
         this.hueSeekbar.setProgress(1);
         this.seek.setMax(255);
@@ -994,8 +642,8 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.seek_blur.setOnSeekBarChangeListener(this);
         this.seek_tailys.setMax(290);
         this.seek_tailys.setProgress(90);
-        this.logo_ll = (LinearLayout) findViewById(R.id.logo_ll);
-        this.img_oK =  findViewById(R.id.btn_done);
+        this.logo_ll = findViewById(R.id.logo_ll);
+        this.img_oK = findViewById(R.id.btn_done);
         this.img_oK.setOnClickListener(this);
         this.user_image.setOnClickListener(this);
         this.select_backgnd.setOnClickListener(this);
@@ -1004,17 +652,17 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.add_text.setOnClickListener(this);
         this.lay_touchremove.setOnClickListener(this);
         this.center_rel.setOnClickListener(this);
-        this.lay_textEdit = (LinearLayout) findViewById(R.id.lay_textEdit);
+        this.lay_textEdit = findViewById(R.id.lay_textEdit);
         this.animSlideUp = Constants.getAnimUp(this);
         this.animSlideDown = Constants.getAnimDown(this);
-        this.verticalSeekBar = (SeekBar) findViewById(R.id.seekBar2);
+        this.verticalSeekBar = findViewById(R.id.seekBar2);
         this.verticalSeekBar.setOnSeekBarChangeListener(this);
-        this.horizontalPicker = (LineColorPicker) findViewById(R.id.picker);
-        this.horizontalPickerColor = (LineColorPicker) findViewById(R.id.picker1);
-        this.shadowPickerColor = (LineColorPicker) findViewById(R.id.pickerShadow);
-        this.pickerBg = (LineColorPicker) findViewById(R.id.pickerBg);
-        this.lay_color = (RelativeLayout) findViewById(R.id.lay_color);
-        this.lay_hue = (RelativeLayout) findViewById(R.id.lay_hue);
+        this.horizontalPicker = findViewById(R.id.picker);
+        this.horizontalPickerColor = findViewById(R.id.picker1);
+        this.shadowPickerColor = findViewById(R.id.pickerShadow);
+        this.pickerBg = findViewById(R.id.pickerBg);
+        this.lay_color = findViewById(R.id.lay_color);
+        this.lay_hue = findViewById(R.id.lay_hue);
         this.lay_effects.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1030,8 +678,8 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             }
         });
 
-        btn_layControls=(Button)findViewById(R.id.btn_layControls);
-        lay_container=(FrameLayout)findViewById(R.id.lay_container);
+        btn_layControls = findViewById(R.id.btn_layControls);
+        lay_container = findViewById(R.id.lay_container);
         btn_layControls.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
 
@@ -1055,19 +703,19 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             }
         });
 
-        this.fontsShow = (LinearLayout) findViewById(R.id.fontsShow);
-        this.colorShow = (LinearLayout) findViewById(R.id.colorShow);
-        this.sadowShow = (LinearLayout) findViewById(R.id.sadowShow);
-        this.bgShow = (LinearLayout) findViewById(R.id.bgShow);
-        this.controlsShow = (LinearLayout) findViewById(R.id.controlsShow);
-        this.layArr[0] = (RelativeLayout) findViewById(R.id.lay_fonts);
-        this.layArr[1] = (RelativeLayout) findViewById(R.id.lay_colors);
-        this.layArr[2] = (RelativeLayout) findViewById(R.id.lay_shadow);
-        this.layArr[3] = (RelativeLayout) findViewById(R.id.lay_backgnd);
-        this.layArr[4] = (RelativeLayout) findViewById(R.id.lay_controls);
+        this.fontsShow = findViewById(R.id.fontsShow);
+        this.colorShow = findViewById(R.id.colorShow);
+        this.sadowShow = findViewById(R.id.sadowShow);
+        this.bgShow = findViewById(R.id.bgShow);
+        this.controlsShow = findViewById(R.id.controlsShow);
+        this.layArr[0] = findViewById(R.id.lay_fonts);
+        this.layArr[1] = findViewById(R.id.lay_colors);
+        this.layArr[2] = findViewById(R.id.lay_shadow);
+        this.layArr[3] = findViewById(R.id.lay_backgnd);
+        this.layArr[4] = findViewById(R.id.lay_controls);
         setSelected(R.id.lay_fonts);
         this.adapter = new AdapterAssetsGridMain(this, getResources().getStringArray(R.array.fonts_array));
-        GridView font_gridview = (GridView) findViewById(R.id.font_gridview);
+        GridView font_gridview = findViewById(R.id.font_gridview);
         font_gridview.setAdapter(this.adapter);
         font_gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -1075,17 +723,17 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 PosterActivity.this.adapter.setSelected(position);
             }
         });
-        HorizontalListView listview = (HorizontalListView) findViewById(R.id.listview);
+        HorizontalListView listview = findViewById(R.id.listview);
         listview.setAdapter(new ImageViewAdapter(this, this.imageId));
         listview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                PosterActivity.this.setTextBgTexture("btxt" + String.valueOf(position));
+                PosterActivity.this.setTextBgTexture("btxt" + position);
             }
         });
-        this.lay_colorOpacity = (RelativeLayout) findViewById(R.id.lay_colorOpacity);
-        this.lay_controlStkr = (RelativeLayout) findViewById(R.id.lay_controlStkr);
-        this.lay_colorOacity = (LinearLayout) findViewById(R.id.lay_colorOacity);
-        this.controlsShowStkr = (LinearLayout) findViewById(R.id.controlsShowStkr);
+        this.lay_colorOpacity = findViewById(R.id.lay_colorOpacity);
+        this.lay_controlStkr = findViewById(R.id.lay_controlStkr);
+        this.lay_colorOacity = findViewById(R.id.lay_colorOacity);
+        this.controlsShowStkr = findViewById(R.id.controlsShowStkr);
         this.lay_colorOpacity.setOnClickListener(this);
         this.lay_controlStkr.setOnClickListener(this);
 
@@ -1586,8 +1234,8 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     }
 
     private void initViewPager() {
-        this.tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        this._mViewPager = (ViewPager) findViewById(R.id.imageviewPager);
+        this.tabs = findViewById(R.id.tabs);
+        this._mViewPager = findViewById(R.id.imageviewPager);
         this._mViewPager.setAdapter(new AdapterSticker(this, getSupportFragmentManager()));
         this.tabs.setViewPager(this._mViewPager);
         this.tabs.setTypeface(this.ttf, 0);
@@ -1738,7 +1386,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 dialog1.setContentView(R.layout.save_success_dialog);
                 ((TextView) dialog1.findViewById(R.id.heater)).setTypeface(PosterActivity.this.ttfHeader);
                 ((TextView) dialog1.findViewById(R.id.txt_free)).setTypeface(PosterActivity.this.ttf);
-                Button btn_ok = (Button) dialog1.findViewById(R.id.btn_ok);
+                Button btn_ok = dialog1.findViewById(R.id.btn_ok);
                 btn_ok.setTypeface(PosterActivity.this.ttf, 1);
                 btn_ok.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
@@ -1846,49 +1494,49 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             this.color_Type = "colored";
             addSticker("", stkr_path, null);
         } else if (call_Value == 0) {
-            setDrawable("colored", "a_" + String.valueOf(position + 1));
+            setDrawable("colored", "a_" + (position + 1));
         } else if (call_Value == 1) {
-            setDrawable("colored", "b_" + String.valueOf(position + 1));
+            setDrawable("colored", "b_" + (position + 1));
         } else if (call_Value == 2) {
-            setDrawable("colored", "c_" + String.valueOf(position + 1));
+            setDrawable("colored", "c_" + (position + 1));
         } else if (call_Value == 3) {
-            setDrawable("white", "d_" + String.valueOf(position + 1));
+            setDrawable("white", "d_" + (position + 1));
         } else if (call_Value == 4) {
-            setDrawable("colored", "e_" + String.valueOf(position + 1));
+            setDrawable("colored", "e_" + (position + 1));
         } else if (call_Value == 5) {
-            setDrawable("colored", "f_" + String.valueOf(position + 1));
+            setDrawable("colored", "f_" + (position + 1));
         } else if (call_Value == 6) {
-            setDrawable("colored", "g_" + String.valueOf(position + 1));
+            setDrawable("colored", "g_" + (position + 1));
         } else if (call_Value == 7) {
-            setDrawable("colored", "h_" + String.valueOf(position + 1));
+            setDrawable("colored", "h_" + (position + 1));
         } else if (call_Value == 8) {
-            setDrawable("colored", "i_" + String.valueOf(position + 1));
+            setDrawable("colored", "i_" + (position + 1));
         } else if (call_Value == 9) {
-            setDrawable("colored", "j_" + String.valueOf(position + 1));
+            setDrawable("colored", "j_" + (position + 1));
         } else if (call_Value == 10) {
-            setDrawable("colored", "k_" + String.valueOf(position + 1));
+            setDrawable("colored", "k_" + (position + 1));
         } else if (call_Value == 11) {
-            setDrawable("colored", "l_" + String.valueOf(position + 1));
+            setDrawable("colored", "l_" + (position + 1));
         } else if (call_Value == 12) {
-            setDrawable("colored", "m_" + String.valueOf(position + 1));
+            setDrawable("colored", "m_" + (position + 1));
         } else if (call_Value == 13) {
-            setDrawable("colored", "n_" + String.valueOf(position + 1));
+            setDrawable("colored", "n_" + (position + 1));
         } else if (call_Value == 14) {
-            setDrawable("colored", "o_" + String.valueOf(position + 1));
+            setDrawable("colored", "o_" + (position + 1));
         } else if (call_Value == 15) {
-            setDrawable("colored", "p_" + String.valueOf(position + 1));
+            setDrawable("colored", "p_" + (position + 1));
         } else if (call_Value == 16) {
-            setDrawable("colored", "q_" + String.valueOf(position + 1));
+            setDrawable("colored", "q_" + (position + 1));
         } else if (call_Value == 17) {
-            setDrawable("colored", "r_" + String.valueOf(position + 1));
+            setDrawable("colored", "r_" + (position + 1));
         } else if (call_Value == 18) {
-            setDrawable("colored", "s_" + String.valueOf(position + 1));
+            setDrawable("colored", "s_" + (position + 1));
         } else if (call_Value == 19) {
-            setDrawable("colored", "t_" + String.valueOf(position + 1));
+            setDrawable("colored", "t_" + (position + 1));
         } else if (call_Value == 20) {
-            setDrawable("white", "sh" + String.valueOf(position + 1));
+            setDrawable("white", "sh" + (position + 1));
         } else if (call_Value == 21) {
-            setDrawable("white", "u_" + String.valueOf(position + 1));
+            setDrawable("white", "u_" + (position + 1));
         } else {
             this.color_Type = "colored";
         }
@@ -1931,7 +1579,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/"+getString(R.string.app_name));
+                    File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "/" + getString(R.string.app_name));
                     if (pictureFileDir.exists() || pictureFileDir.mkdirs()) {
                         String photoFile = "Photo_" + System.currentTimeMillis();
                         if (inPNG) {
@@ -1975,18 +1623,9 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         }).start();
         pd.setOnDismissListener(new OnDismissListener() {
 
-            class C03041 implements DialogInterface.OnClickListener {
-                C03041() {
-                }
-
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }
-
             public void onDismiss(DialogInterface dialog) {
                 if (PosterActivity.this.checkMemory) {
-                    Toast.makeText(PosterActivity.this.getApplicationContext(), PosterActivity.this.getString(R.string.saved).toString() + " " + PosterActivity.this.filename, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PosterActivity.this.getApplicationContext(), PosterActivity.this.getString(R.string.saved) + " " + PosterActivity.this.filename, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(PosterActivity.this, ShareActivity.class);
                     intent.putExtra("uri", PosterActivity.this.filename);
                     intent.putExtra("way", "Poster");
@@ -1996,6 +1635,15 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 AlertDialog alertDialog = new AlertDialog.Builder(PosterActivity.this, 16974126).setMessage(Constants.getSpannableString(PosterActivity.this, Typeface.DEFAULT, R.string.memoryerror)).setPositiveButton(Constants.getSpannableString(PosterActivity.this, Typeface.DEFAULT, R.string.ok), new C03041()).create();
                 alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_;
                 alertDialog.show();
+            }
+
+            class C03041 implements DialogInterface.OnClickListener {
+                C03041() {
+                }
+
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
             }
         });
     }
@@ -2090,7 +1738,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 } else {
                     this.background_blur.setVisibility(View.GONE);
                 }
-                new BlurOperationAsync(this, imgBtmap, this.background_blur).execute(new String[]{""});
+                new BlurOperationAsync(this, imgBtmap, this.background_blur).execute("");
                 return;
             default:
                 return;
@@ -2099,7 +1747,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
 
     private void addTilesBG(int resId) {
         if (resId != 0) {
-            setImageBitmapAndResizeLayout1(Constants.getTiledBitmap((Activity) this, resId, imgBtmap, this.seek_tailys));
+            setImageBitmapAndResizeLayout1(Constants.getTiledBitmap(this, resId, imgBtmap, this.seek_tailys));
         }
     }
 
@@ -2501,12 +2149,13 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == -1) {
+        if (resultCode == RESULT_OK) {
             this.seekbar_container.setVisibility(View.GONE);
-            if (data != null || requestCode == SELECT_PICTURE_FROM_CAMERA || requestCode == 4 || requestCode == TEXT_ACTIVITY) {
+            if (data != null || requestCode == SELECT_PICTURE_FROM_CAMERA || requestCode == SELECT_PICTURE_FROM_GALLERY || requestCode == 4 || requestCode == TEXT_ACTIVITY) {
                 Bundle bundle;
-                Intent _main;
+                Intent intent;
                 if (requestCode == TEXT_ACTIVITY) {
                     bundle = data.getExtras();
                     TextInfo textInfo = new TextInfo();
@@ -2560,19 +2209,23 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                 if (requestCode == SELECT_PICTURE_FROM_GALLERY) {
                     try {
                         btmSticker = ImageUtils.resizeBitmap(Constants.getBitmapFromUri(this, data.getData(), this.screenWidth, this.screenHeight), (int) this.screenWidth, (int) this.screenWidth);
-                        _main = new Intent(this, SecondCropActivity.class);
-                        _main.putExtra("value", "sticker");
-                        startActivity(_main);
+                        intent = new Intent(this, SecondCropActivity.class);
+                        intent.putExtra("value", "sticker");
+                        startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
                 if (requestCode == SELECT_PICTURE_FROM_CAMERA) {
                     try {
-                        btmSticker = ImageUtils.resizeBitmap(Constants.getBitmapFromUri(this, Uri.fromFile(this.f25f), this.screenWidth, this.screenHeight), (int) this.screenWidth, (int) this.screenWidth);
-                        _main = new Intent(this, SecondCropActivity.class);
-                        _main.putExtra("value", "sticker");
-                        startActivity(_main);
+
+
+                        btmSticker = ImageUtils.resizeBitmap(Constants.getBitmapFromUri(this, data.getData(), this.screenWidth, this.screenHeight), (int) this.screenWidth, (int) this.screenWidth);
+                        intent = new Intent(this, SecondCropActivity.class);
+                        intent.putExtra("value", "sticker");
+                        startActivity(intent);
+
+
                     } catch (Exception e2) {
                         e2.printStackTrace();
                     }
@@ -2603,6 +2256,32 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
                     drawBackgroundImage(this.ratio, position, this.profile, "nonCreated");
                     return;
                 }
+                if (requestCode == CAMERA_REQUEST_CODE) {
+
+                    File f = new File(currentPhotoPath);
+
+                    Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+
+                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    Uri contentUri = Uri.fromFile(f);
+                    mediaScanIntent.setData(contentUri);
+
+                    try {
+
+
+                        btmSticker = ImageUtils.resizeBitmap(Constants.getBitmapFromUri(this, contentUri, this.screenWidth, this.screenHeight), (int) this.screenWidth, (int) this.screenWidth);
+                        intent = new Intent(this, SecondCropActivity.class);
+                        intent.putExtra("value", "sticker");
+                        startActivity(intent);
+
+
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
+//                    this.sendBroadcast(mediaScanIntent);
+                }
+
+
                 return;
             }
             AlertDialog alertDialog = new AlertDialog.Builder(this, 16974126).setMessage(Constants.getSpannableString(this, Typeface.DEFAULT, R.string.picUpImg)).setPositiveButton(Constants.getSpannableString(this, Typeface.DEFAULT, R.string.ok), new DialogInterface.OnClickListener() {
@@ -2617,18 +2296,79 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         }
     }
 
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.amt.postermaker.graphicdesign.flyer.bannermaker.provider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERM_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void askCameraPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent();
+        }
+
+    }
+
     private void showDialogPicker() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(1);
         dialog.setContentView(R.layout.dialog);
         ((TextView) dialog.findViewById(R.id.txt_title)).setTypeface(Constants.getHeaderTypeface(this));
-        ((ImageButton) dialog.findViewById(R.id.img_camera)).setOnClickListener(new OnClickListener() {
+        dialog.findViewById(R.id.img_camera).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                PosterActivity.this.onCameraButtonClick();
+//                askCameraPermissions();
+                onCameraButtonClick();
                 dialog.dismiss();
             }
         });
-        ((ImageButton) dialog.findViewById(R.id.img_gallery)).setOnClickListener(new OnClickListener() {
+        dialog.findViewById(R.id.img_gallery).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 PosterActivity.this.onGalleryButtonClick();
                 dialog.dismiss();
@@ -2638,10 +2378,19 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
     }
 
     public void onCameraButtonClick() {
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        this.f25f = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
-        intent.putExtra("output", Uri.fromFile(this.f25f));
-        startActivityForResult(intent, SELECT_PICTURE_FROM_CAMERA);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri photoURI = null;
+        try {
+            photoURI = FileProvider.getUriForFile(this,
+                    "com.amt.postermaker.graphicdesign.flyer.bannermaker.provider",
+                    createImageFile());
+//            this.f25f = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
+            intent.putExtra("output", photoURI);
+            startActivityForResult(intent, SELECT_PICTURE_FROM_CAMERA);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void onGalleryButtonClick() {
@@ -2674,13 +2423,13 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
             dialog.setContentView(R.layout.leave_dialog);
             ((TextView) dialog.findViewById(R.id.txtapp)).setTypeface(this.ttfHeader);
             ((TextView) dialog.findViewById(R.id.txt_free)).setTypeface(this.ttf);
-            ((Button) dialog.findViewById(R.id.btn_yes)).setOnClickListener(new OnClickListener() {
+            dialog.findViewById(R.id.btn_yes).setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
                     PosterActivity.this.finish();
                     dialog.dismiss();
                 }
             });
-            ((Button) dialog.findViewById(R.id.btn_no)).setOnClickListener(new OnClickListener() {
+            dialog.findViewById(R.id.btn_no).setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
                     dialog.dismiss();
                 }
@@ -2694,7 +2443,6 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         this.color_Type = "colored";
         addSticker("", "", SecondCropActivity.bitmapImage);
     }
-
 
     public void onColor(int position, String way) {
         if (position != 0) {
@@ -2738,15 +2486,15 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         ((TextView) dialog.findViewById(R.id.txtapp)).setTypeface(this.ttfHeader);
         ((TextView) dialog.findViewById(R.id.txt)).setTypeface(this.ttf);
         ((TextView) dialog.findViewById(R.id.txt1)).setTypeface(this.ttf);
-        Button dialogButton = (Button) dialog.findViewById(R.id.btn_template);
+        Button dialogButton = dialog.findViewById(R.id.btn_template);
         dialogButton.setTypeface(this.ttf, Typeface.BOLD);
         dialogButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                PosterActivity.this.createFrame();
+                createFrame();
                 dialog.dismiss();
             }
         });
-        Button btn_yes = (Button) dialog.findViewById(R.id.btn_image);
+        Button btn_yes = dialog.findViewById(R.id.btn_image);
         btn_yes.setTypeface(this.ttf, Typeface.BOLD);
         btn_yes.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -2760,7 +2508,7 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
 //                if (!(PosterActivity.this.preferences.getBoolean("isAdsDisabled", false) || PosterActivity.this.preferences.getBoolean("removeWatermark", false))) {
 //                    PosterActivity.this.bitmap = ImageUtils.mergelogo(PosterActivity.this.bitmap, logo);
 //                }
-                PosterActivity.this.saveBitmap(true);
+                saveBitmap(true);
                 dialog.dismiss();
             }
         });
@@ -2774,14 +2522,14 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         dialog.setContentView(R.layout.error_dialog);
         ((TextView) dialog.findViewById(R.id.txtapp)).setTypeface(this.ttfHeader);
         ((TextView) dialog.findViewById(R.id.txt)).setTypeface(this.ttf);
-        Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
+        Button btn_ok = dialog.findViewById(R.id.btn_ok);
         btn_ok.setTypeface(this.ttf);
         btn_ok.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 PosterActivity.this.finish();
             }
         });
-        Button btn_conti = (Button) dialog.findViewById(R.id.btn_conti);
+        Button btn_conti = dialog.findViewById(R.id.btn_conti);
         btn_conti.setTypeface(this.ttf);
         btn_conti.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -2798,5 +2546,365 @@ public class PosterActivity extends FragmentActivity implements OnClickListener,
         new FilterAdjuster(sepiaFilter5).adjust(100);
         gpuImage.requestRender();
         return gpuImage.getBitmapWithFilterApplied(bitmap);
+    }
+
+    class main_layout_runnable implements Runnable {
+
+        main_layout_runnable() {
+        }
+
+        public void run() {
+            PosterActivity.this.guideline.setImageBitmap(Constants.guidelines_bitmap(PosterActivity.this, PosterActivity.this.main_rel.getWidth(), PosterActivity.this.main_rel.getHeight()));
+            PosterActivity.this.lay_scroll.post(new layout_());
+        }
+
+        class layout_ implements Runnable {
+            layout_() {
+            }
+
+            public void run() {
+                int[] los1 = new int[2];
+                PosterActivity.this.lay_scroll.getLocationOnScreen(los1);
+                PosterActivity.this.parentY = (float) los1[1];
+            }
+        }
+    }
+
+    public class BlurOperationTwoAsync extends AsyncTask<String, Void, String> {
+        ImageView background_blur;
+        Bitmap btmp;
+        Activity context;
+
+        public BlurOperationTwoAsync(PosterActivity posterActivity, Bitmap bit, ImageView background_blur) {
+            this.context = posterActivity;
+            this.btmp = bit;
+            this.background_blur = background_blur;
+        }
+
+        protected void onPreExecute() {
+        }
+
+        protected String doInBackground(String... params) {
+            this.btmp = PosterActivity.this.gaussinBlur(this.context, this.btmp);
+            return "yes";
+        }
+
+        protected void onPostExecute(String result) {
+            this.background_blur.setImageBitmap(this.btmp);
+            PosterActivity.this.txt_stkr_rel.removeAllViews();
+            if (PosterActivity.this.temp_path.equals("")) {
+                new LordStickersAsync().execute("" + PosterActivity.this.template_id);
+                return;
+            }
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
+            if (file.exists()) {
+                if (file.listFiles().length >= 7) {
+                    new LordStickersAsync().execute("" + PosterActivity.this.template_id);
+                } else if (new File(PosterActivity.this.temp_path).exists()) {
+                    new LordStickersAsync().execute("" + PosterActivity.this.template_id);
+                } else {
+                    new LordStickersAsync().execute("" + PosterActivity.this.template_id);
+                }
+            } else if (new File(PosterActivity.this.temp_path).exists()) {
+                new LordStickersAsync().execute("" + PosterActivity.this.template_id);
+            } else {
+                new LordStickersAsync().execute("" + PosterActivity.this.template_id);
+            }
+        }
+    }
+
+    class change_color_listener implements OnColorChangedListener {
+        change_color_listener() {
+        }
+
+        public void onColorChanged(int c) {
+            PosterActivity.this.updateBgColor(c);
+        }
+    }
+
+    private class LordStickersAsync extends AsyncTask<String, String, Boolean> {
+        private LordStickersAsync() {
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... params) {
+            DatabaseHandler dh = DatabaseHandler.getDbHandler(PosterActivity.this.getApplicationContext());
+            ArrayList<ComponentInfo> shapeInfoList = dh.getComponentInfoList(PosterActivity.this.template_id, "SHAPE");
+            ArrayList<TextInfo> textInfoList = dh.getTextInfoList(PosterActivity.this.template_id);
+            ArrayList<ComponentInfo> stickerInfoList = dh.getComponentInfoList(PosterActivity.this.template_id, "STICKER");
+            dh.close();
+            PosterActivity.this.txtShapeList = new HashMap();
+            Iterator it = textInfoList.iterator();
+            while (it.hasNext()) {
+                TextInfo ti = (TextInfo) it.next();
+                PosterActivity.this.txtShapeList.put(Integer.valueOf(ti.getORDER()), ti);
+            }
+            it = stickerInfoList.iterator();
+            while (it.hasNext()) {
+                ComponentInfo ci = (ComponentInfo) it.next();
+                PosterActivity.this.txtShapeList.put(Integer.valueOf(ci.getORDER()), ci);
+            }
+            return Boolean.valueOf(true);
+        }
+
+        protected void onPostExecute(Boolean isDownloaded) {
+            super.onPostExecute(isDownloaded);
+            if (PosterActivity.this.txtShapeList.size() == 0) {
+                PosterActivity.this.dialogIs.dismiss();
+            }
+            List sortedKeys = new ArrayList(PosterActivity.this.txtShapeList.keySet());
+            Collections.sort(sortedKeys);
+            int len = sortedKeys.size();
+            for (int j = 0; j < len; j++) {
+                Object obj = PosterActivity.this.txtShapeList.get(sortedKeys.get(j));
+                PosterActivity posterActivity;
+                if (obj instanceof ComponentInfo) {
+                    String stkr_path = ((ComponentInfo) obj).getSTKR_PATH();
+                    ResizableStickerView riv;
+                    if (stkr_path.equals("")) {
+                        riv = new ResizableStickerView(PosterActivity.this);
+                        PosterActivity.this.txt_stkr_rel.addView(riv);
+                        riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
+                        riv.setComponentInfo((ComponentInfo) obj);
+                        riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
+                        riv.setOnTouchCallbackListener(PosterActivity.this);
+                        riv.setBorderVisibility(false);
+                        posterActivity = PosterActivity.this;
+                        posterActivity.sizeFull++;
+                    } else {
+                        File pictureFileDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1");
+                        if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
+                            Log.d("", "Can't create directory to save image.");
+                            Toast.makeText(PosterActivity.this, PosterActivity.this.getResources().getString(R.string.create_dir_err), Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if (new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), getString(R.string.app_name) + "/.Poster Maker Stickers/category1").exists()) {
+                            File file1 = new File(stkr_path);
+                            if (file1.exists()) {
+                                riv = new ResizableStickerView(PosterActivity.this);
+                                PosterActivity.this.txt_stkr_rel.addView(riv);
+                                riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
+                                riv.setComponentInfo((ComponentInfo) obj);
+                                riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
+                                riv.setOnTouchCallbackListener(PosterActivity.this);
+                                riv.setBorderVisibility(false);
+                                posterActivity = PosterActivity.this;
+                                posterActivity.sizeFull++;
+                            } else if (file1.getName().replace(".png", "").length() < 7) {
+                                PosterActivity.this.dialogShow = false;
+                            } else {
+                                if (PosterActivity.this.OneShow) {
+                                    PosterActivity.this.dialogShow = true;
+                                    PosterActivity.this.errorDialogTempInfo();
+                                    PosterActivity.this.OneShow = false;
+                                }
+                                posterActivity = PosterActivity.this;
+                                posterActivity.sizeFull++;
+                            }
+                        } else {
+                            File file1 = new File(stkr_path);
+                            if (file1.exists()) {
+                                riv = new ResizableStickerView(PosterActivity.this);
+                                PosterActivity.this.txt_stkr_rel.addView(riv);
+                                riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
+                                riv.setComponentInfo((ComponentInfo) obj);
+                                riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
+                                riv.setOnTouchCallbackListener(PosterActivity.this);
+                                riv.setBorderVisibility(false);
+                                posterActivity = PosterActivity.this;
+                                posterActivity.sizeFull++;
+                            } else if (file1.getName().replace(".png", "").length() < 7) {
+                                PosterActivity.this.dialogShow = false;
+                            } else {
+                                if (PosterActivity.this.OneShow) {
+                                    PosterActivity.this.dialogShow = true;
+                                    PosterActivity.this.errorDialogTempInfo();
+                                    PosterActivity.this.OneShow = false;
+                                }
+                                posterActivity = PosterActivity.this;
+                                posterActivity.sizeFull++;
+                            }
+                        }
+                    }
+                } else {
+                    AutofitTextRel rl = new AutofitTextRel(PosterActivity.this);
+                    PosterActivity.this.txt_stkr_rel.addView(rl);
+                    rl.setTextInfo((TextInfo) obj, false);
+                    rl.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
+                    rl.setOnTouchCallbackListener(PosterActivity.this);
+                    rl.setBorderVisibility(false);
+                    PosterActivity.this.fontName = ((TextInfo) obj).getFONT_NAME();
+                    PosterActivity.this.tColor = ((TextInfo) obj).getTEXT_COLOR();
+                    PosterActivity.this.shadowColor = ((TextInfo) obj).getSHADOW_COLOR();
+                    PosterActivity.this.shadowProg = ((TextInfo) obj).getSHADOW_PROG();
+                    PosterActivity.this.tAlpha = ((TextInfo) obj).getTEXT_ALPHA();
+                    PosterActivity.this.bgDrawable = ((TextInfo) obj).getBG_DRAWABLE();
+                    PosterActivity.this.bgAlpha = ((TextInfo) obj).getBG_ALPHA();
+                    PosterActivity.this.rotation = ((TextInfo) obj).getROTATION();
+                    PosterActivity.this.bgColor = ((TextInfo) obj).getBG_COLOR();
+                    posterActivity = PosterActivity.this;
+                    posterActivity.sizeFull++;
+                    Log.e("details is", "" + ((TextInfo) obj).getWIDTH() + " ," + ((TextInfo) obj).getHEIGHT() + " ," + ((TextInfo) obj).getTEXT());
+                }
+            }
+            if (PosterActivity.this.txtShapeList.size() == PosterActivity.this.sizeFull && PosterActivity.this.dialogShow) {
+                PosterActivity.this.dialogIs.dismiss();
+            }
+        }
+    }
+
+    private class LordTemplateAsync extends AsyncTask<String, String, Boolean> {
+        int indx;
+        String postion;
+
+        private LordTemplateAsync() {
+            this.indx = 0;
+            this.postion = "1";
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            PosterActivity.this.dialogIs = new ProgressDialog(PosterActivity.this);
+            PosterActivity.this.dialogIs.setMessage(PosterActivity.this.getResources().getString(R.string.plzwait));
+            PosterActivity.this.dialogIs.setCancelable(false);
+            PosterActivity.this.dialogIs.show();
+        }
+
+        protected Boolean doInBackground(String... params) {
+            this.indx = Integer.parseInt(params[0]);
+            TemplateInfo templateInfo = PosterActivity.this.templateList.get(this.indx);
+            PosterActivity.this.template_id = templateInfo.getTEMPLATE_ID();
+            PosterActivity.this.frame_Name = templateInfo.getFRAME_NAME();
+            PosterActivity.this.temp_path = templateInfo.getTEMP_PATH();
+            PosterActivity.this.ratio = templateInfo.getRATIO();
+            PosterActivity.this.profile = templateInfo.getPROFILE_TYPE();
+            String seekValue1 = templateInfo.getSEEK_VALUE();
+            PosterActivity.this.hex = templateInfo.getTEMPCOLOR();
+            PosterActivity.this.overlay_Name = templateInfo.getOVERLAY_NAME();
+            PosterActivity.this.overlay_opacty = templateInfo.getOVERLAY_OPACITY();
+            PosterActivity.this.overlay_blur = templateInfo.getOVERLAY_BLUR();
+            PosterActivity.this.seekValue = Integer.parseInt(seekValue1);
+            return Boolean.valueOf(true);
+        }
+
+        protected void onPostExecute(Boolean isDownloaded) {
+            super.onPostExecute(isDownloaded);
+            if (PosterActivity.this.profile.equals("Background")) {
+                this.postion = PosterActivity.this.frame_Name.replace("b", "");
+            } else if (!PosterActivity.this.profile.equals("Color")) {
+                if (PosterActivity.this.profile.equals("Texture")) {
+                    this.postion = PosterActivity.this.frame_Name.replace("t", "");
+                    PosterActivity.this.seek_tailys.setProgress(PosterActivity.this.seekValue);
+                } else if (!(!PosterActivity.this.profile.equals("Temp_Path") || PosterActivity.this.frame_Name.equals("") || PosterActivity.this.ratio.equals(""))) {
+                    this.postion = PosterActivity.this.frame_Name.replace("b", "");
+                }
+            }
+            if (!PosterActivity.this.overlay_Name.equals("")) {
+                PosterActivity.this.setBitmapOverlay(BitmapFactory.decodeResource(PosterActivity.this.getResources(), PosterActivity.this.getResources().getIdentifier(PosterActivity.this.overlay_Name, "drawable", PosterActivity.this.getPackageName())));
+            }
+            PosterActivity.this.seek.setProgress(PosterActivity.this.overlay_opacty);
+            PosterActivity.this.seek_blur.setProgress(PosterActivity.this.overlay_blur);
+            String vv = String.valueOf(Integer.parseInt(this.postion));
+            if (PosterActivity.this.templateList.get(this.indx).getTYPE().equals("USER")) {
+                PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
+            }
+            if (PosterActivity.this.templateList.get(this.indx).getTYPE().equals("FREESTYLE")) {
+                PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
+            }
+            if (PosterActivity.this.templateList.get(this.indx).getTYPE().equals("FRIDAY")) {
+                PosterActivity.this.drawBackgroundImage(PosterActivity.this.ratio, vv, PosterActivity.this.profile, "created");
+            }
+        }
+    }
+
+    private class SaveStickersAsync extends AsyncTask<String, String, Boolean> {
+        Object objk;
+        String stkr_path;
+
+        public SaveStickersAsync(Object obj1) {
+            this.objk = obj1;
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... params) {
+            String stkrName = params[0];
+            this.stkr_path = ((ComponentInfo) this.objk).getSTKR_PATH();
+            try {
+                Bitmap bitmap = BitmapFactory.decodeResource(PosterActivity.this.getResources(), PosterActivity.this.getResources().getIdentifier(stkrName, "drawable", PosterActivity.this.getPackageName()));
+                if (bitmap != null) {
+                    return Boolean.valueOf(Constants.saveBitmapObject(PosterActivity.this, bitmap, this.stkr_path));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return Boolean.valueOf(false);
+        }
+
+        protected void onPostExecute(Boolean isDownloaded) {
+            super.onPostExecute(isDownloaded);
+            PosterActivity posterActivity = PosterActivity.this;
+            posterActivity.sizeFull++;
+            if (PosterActivity.this.txtShapeList.size() == PosterActivity.this.sizeFull) {
+                PosterActivity.this.dialogShow = true;
+            }
+            if (isDownloaded.booleanValue()) {
+                ResizableStickerView riv = new ResizableStickerView(PosterActivity.this);
+                PosterActivity.this.txt_stkr_rel.addView(riv);
+                riv.optimizeScreen(PosterActivity.this.screenWidth, PosterActivity.this.screenHeight);
+                riv.setComponentInfo((ComponentInfo) this.objk);
+                riv.optimize(PosterActivity.this.wr, PosterActivity.this.hr);
+                riv.setOnTouchCallbackListener(PosterActivity.this);
+                riv.setBorderVisibility(false);
+            }
+            if (PosterActivity.this.dialogShow) {
+                PosterActivity.this.dialogIs.dismiss();
+            }
+        }
+    }
+
+    private class SavebackgrundAsync extends AsyncTask<String, String, Boolean> {
+        private String crted;
+        private String profile;
+        private String ratio;
+
+        private SavebackgrundAsync() {
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... params) {
+            String stkrName = params[0];
+            this.ratio = params[1];
+            this.profile = params[2];
+            this.crted = params[3];
+            try {
+                Bitmap bitmap = BitmapFactory.decodeResource(PosterActivity.this.getResources(), PosterActivity.this.getResources().getIdentifier(stkrName, "drawable", PosterActivity.this.getPackageName()));
+                if (bitmap != null) {
+                    return Boolean.valueOf(Constants.saveBitmapObject(PosterActivity.this, bitmap, PosterActivity.this.temp_path));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return Boolean.valueOf(false);
+        }
+
+        protected void onPostExecute(Boolean isDownloaded) {
+            super.onPostExecute(isDownloaded);
+            if (isDownloaded.booleanValue()) {
+                try {
+                    PosterActivity.this.bitmapRatio(this.ratio, this.profile, ImageUtils.getResampleImageBitmap(Uri.parse(PosterActivity.this.temp_path), PosterActivity.this, (int) (PosterActivity.this.screenWidth > PosterActivity.this.screenHeight ? PosterActivity.this.screenWidth : PosterActivity.this.screenHeight)), this.crted);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                PosterActivity.this.txt_stkr_rel.removeAllViews();
+            }
+        }
     }
 }

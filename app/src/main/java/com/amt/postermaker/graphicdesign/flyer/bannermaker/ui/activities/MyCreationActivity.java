@@ -1,7 +1,7 @@
 package com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.activities;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,9 +11,14 @@ import android.os.Environment;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
+
 import android.widget.GridView;
 import android.widget.ImageView;
+
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,24 +27,28 @@ import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.adapter.CreationAdapter;
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.ads.AdsUtils;
 
-public class MyCreationActivity extends Activity {
+public class MyCreationActivity extends AppCompatActivity {
     
     private CreationAdapter galleryAdapter;
     private GridView lstList;
     private ImageView noImage;
     public static ArrayList<String> IMAGEALLARY=new ArrayList<String>();
-
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_creation);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         AdsUtils.showBannerSmall(this, findViewById(R.id.llAds));
 
-        findViewById(R.id.btn_bck).setOnClickListener(new View.OnClickListener() {
+        toolbar = this.findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.mycreation));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                MyCreationActivity.super.onBackPressed();
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
 

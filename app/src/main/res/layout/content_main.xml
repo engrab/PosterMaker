@@ -60,11 +60,11 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/ivMyDesign"
+                android:id="@+id/ivShareApp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_my_design"/>
+                android:src="@drawable/ic_share_app"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

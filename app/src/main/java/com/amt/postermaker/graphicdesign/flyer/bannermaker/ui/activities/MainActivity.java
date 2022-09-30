@@ -111,16 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 return true;
             case R.id.action_share:
 
-                try {
-                    String text = "Download Anime Wallpaper to set as home and lock screen\n https://play.google.com/store/apps/details?id=" + getPackageName();
-                    Intent txtIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    txtIntent.setType("text/plain");
-                    txtIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Wallpaper");
-                    txtIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
-                    startActivity(Intent.createChooser(txtIntent, "Share Anime Wallpaper"));
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "can not share text", Toast.LENGTH_SHORT).show();
-                }
+                shareApp();
 
                 return true;
 
@@ -128,6 +119,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         }
 
         return false;
+    }
+
+    public void shareApp(){
+        try {
+            String text = "Download Poster Maker App share with friends and family member with built in beautiful design\n https://play.google.com/store/apps/details?id=" + getPackageName();
+            Intent txtIntent = new Intent(android.content.Intent.ACTION_SEND);
+            txtIntent.setType("text/plain");
+            txtIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Poster Maker");
+            txtIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(txtIntent, "Share Poster Maker App"));
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "can not share text", Toast.LENGTH_SHORT).show();
+        }
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         }
         findViewById(R.id.ivCreatePoster).setOnClickListener(this);
         findViewById(R.id.ivFreeTemplate).setOnClickListener(this);
-        findViewById(R.id.ivMyDesign).setOnClickListener(this);
+        findViewById(R.id.ivShareApp).setOnClickListener(this);
         findViewById(R.id.ivMyWork).setOnClickListener(this);
         Typeface ttf = Constants.getHeaderTypeface(this);
 //        this.layView = findViewById(R.id.layView);
@@ -236,10 +240,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ivMyDesign:
-                Intent i1 = new Intent("android.intent.action.VIEW");
-                i1.setData(Uri.parse("https://play.google.com/store/apps/developer?id="));
-                startActivity(i1);
+            case R.id.ivShareApp:
+                shareApp();
                 return;
             case R.id.ivMyWork:
                 startActivity(new Intent(this, MyCreationActivity.class));
