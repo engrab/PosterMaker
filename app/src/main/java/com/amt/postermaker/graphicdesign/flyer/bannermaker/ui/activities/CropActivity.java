@@ -92,8 +92,8 @@ public class CropActivity extends Activity {
         this.ttf = Constants.getTextTypeface(this);
         this.ttfHeader = Constants.getHeaderTypeface(this);
         this.headertext.setTypeface(this.ttfHeader);
-        this.custom.setTypeface(this.ttf, 1);
-        this.square.setTypeface(this.ttf, 1);
+        this.custom.setTypeface(this.ttf, Typeface.BOLD);
+        this.square.setTypeface(this.ttf, Typeface.BOLD);
         if (getIntent().getExtras().getString("value").equals("image")) {
             this.value = "image";
             this.bitmap = SelectImageActivity.bitmap;

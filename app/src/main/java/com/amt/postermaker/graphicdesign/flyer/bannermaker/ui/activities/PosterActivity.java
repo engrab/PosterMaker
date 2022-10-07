@@ -1199,7 +1199,7 @@ public class PosterActivity extends AppCompatActivity implements OnClickListener
                     this.lay_textEdit.startAnimation(this.animSlideDown);
                     this.lay_textEdit.setVisibility(View.GONE);
                 }
-                showDialogPicker();
+                onGalleryButtonClick();
                 return;
             default:
                 return;
@@ -2236,15 +2236,22 @@ public class PosterActivity extends AppCompatActivity implements OnClickListener
 //                }
                 // original
                 if (requestCode == SELECT_PICTURE_FROM_CAMERA) {
+
                     try {
 
-                        btmSticker = ImageUtils.resizeBitmap(Constants.getBitmapFromUri(this, data.getData(), this.screenWidth, this.screenHeight), (int) this.screenWidth, (int) this.screenWidth);
-                        intent = new Intent(this, CropActivity.class);
-                        intent.putExtra("value", "sticker");
-                        startActivity(intent);
+                        if (data != null) {
+
+                            Bitmap bitmapFromUri = Constants.getBitmapFromUri(PosterActivity.this, data.getData(), this.screenWidth, this.screenHeight);
+                            btmSticker = ImageUtils.resizeBitmap(bitmapFromUri, (int) this.screenWidth, (int) this.screenWidth);
+                            intent = new Intent(this, CropActivity.class);
+                            intent.putExtra("value", "sticker");
+                            startActivity(intent);
+                        }
+
 
 
                     } catch (Exception e2) {
+                        Log.d(TAG, "onActivityResult: "+e2.getMessage());
                         e2.printStackTrace();
                     }
                 }
@@ -2331,34 +2338,35 @@ public class PosterActivity extends AppCompatActivity implements OnClickListener
 
         return file;
     }
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.amt.postermaker.graphicdesign.flyer.bannermaker.provider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, SELECT_PICTURE_FROM_CAMERA);
-            }
-        }
-    }
+//    private void dispatchTakePictureIntent() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Uri photoURI = FileProvider.getUriForFile(this,
+//                        "com.amt.postermaker.graphicdesign.flyer.bannermaker.provider",
+//                        photoFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                startActivityForResult(takePictureIntent, SELECT_PICTURE_FROM_CAMERA);
+//            }
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                dispatchTakePictureIntent();
+//                dispatchTakePictureIntent();
+                onCameraButtonClick();
             } else {
                 Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
             }
@@ -2369,7 +2377,8 @@ public class PosterActivity extends AppCompatActivity implements OnClickListener
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
         } else {
-            dispatchTakePictureIntent();
+//            dispatchTakePictureIntent();
+            onCameraButtonClick();
         }
 
     }
@@ -2388,7 +2397,7 @@ public class PosterActivity extends AppCompatActivity implements OnClickListener
         });
         dialog.findViewById(R.id.img_gallery).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                PosterActivity.this.onGalleryButtonClick();
+                onGalleryButtonClick();
                 dialog.dismiss();
             }
         });
@@ -2405,6 +2414,14 @@ public class PosterActivity extends AppCompatActivity implements OnClickListener
     }
 
     public void onCameraButtonClick() {
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, SELECT_PICTURE_FROM_CAMERA);
+
+//        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//        File file = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
+//        intent.putExtra("output", Uri.fromFile(file));
+//        startActivityForResult(intent, SELECT_PICTURE_FROM_CAMERA);
 
 //        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 //        File file = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
@@ -2424,7 +2441,7 @@ public class PosterActivity extends AppCompatActivity implements OnClickListener
 //            e.printStackTrace();
 //        }
 
-        dispatchTakePictureIntent();
+//        dispatchTakePictureIntent();
 
     }
 

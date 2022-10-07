@@ -35,7 +35,7 @@ public class FragmentImage extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                file = new File(Environment.getExternalStorageDirectory(), ".temp.jpg");
+                file = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
                 intent.putExtra("output", Uri.fromFile(file));
                 getActivity().startActivityForResult(intent, FragmentImage.SELECT_PICTURE_FROM_CAMERA);
             }
