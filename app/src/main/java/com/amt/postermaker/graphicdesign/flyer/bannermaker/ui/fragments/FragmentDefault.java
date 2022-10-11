@@ -67,9 +67,10 @@ public class FragmentDefault extends Fragment implements OnDataChanged {
             try {
                 FragmentDefault.this.templateList.clear();
                 DatabaseHandler dh = DatabaseHandler.getDbHandler(FragmentDefault.this.getActivity());
-                if (FragmentDefault.this.catName.equals("MY_TEMP")) {
-                    FragmentDefault.this.templateList = dh.getTemplateListDes("USER");
-                } else if (FragmentDefault.this.catName.equals("FREE_TEMP")) {
+//                if (FragmentDefault.this.catName.equals("MY_TEMP")) {
+//                    FragmentDefault.this.templateList = dh.getTemplateListDes("USER");
+//                } else
+                    if (FragmentDefault.this.catName.equals("FREE_TEMP")) {
                     FragmentDefault.this.templateList = dh.getTemplateList("FREESTYLE");
                 } else if (FragmentDefault.this.catName.equals("FRIDAY_TEMP")) {
                     FragmentDefault.this.templateList = dh.getTemplateList("FRIDAY");
@@ -231,9 +232,10 @@ public class FragmentDefault extends Fragment implements OnDataChanged {
 
     public void updateAdapter() {
         DatabaseHandler dh = DatabaseHandler.getDbHandler(getActivity());
-        if (this.catName.equals("MY_TEMP")) {
-            this.templateList = dh.getTemplateListDes("USER");
-        } else if (this.catName.equals("FREE_TEMP")) {
+//        if (this.catName.equals("MY_TEMP")) {
+//            this.templateList = dh.getTemplateListDes("USER");
+//        } else
+            if (this.catName.equals("FREE_TEMP")) {
             this.templateList = dh.getTemplateList("FREESTYLE");
         } else if (this.catName.equals("FRIDAY_TEMP")) {
             this.templateList = dh.getTemplateList("FRIDAY");

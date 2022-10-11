@@ -1,6 +1,5 @@
 package com.amt.postermaker.graphicdesign.flyer.bannermaker.ui.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,14 +8,15 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.amt.postermaker.graphicdesign.flyer.bannermaker.R;
 
 
-public class ShareActivity extends Activity implements View.OnClickListener {
+public class ShareActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView imageView, shareImage, exit, facebook, whatsapp, twitter, instagram;
     Uri imageUri;
     String image_path;
@@ -28,18 +28,18 @@ public class ShareActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_share);
 
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
         // add menu for home button
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-        shareImage = (ImageView) findViewById(R.id.shareImage);
+        imageView = findViewById(R.id.imageView);
+        shareImage = findViewById(R.id.shareImage);
         //exit = (ImageView) findViewById(R.id.exit);
-        facebook = (ImageView) findViewById(R.id.facebook);
-        whatsapp = (ImageView) findViewById(R.id.whatsapp);
-        twitter = (ImageView) findViewById(R.id.twitter);
-        instagram = (ImageView) findViewById(R.id.instagram);
+        facebook = findViewById(R.id.facebook);
+        whatsapp = findViewById(R.id.whatsapp);
+        twitter = findViewById(R.id.twitter);
+        instagram = findViewById(R.id.instagram);
         // exit.setOnClickListener(this);
         shareImage.setOnClickListener(this);
         facebook.setOnClickListener(this);
@@ -63,12 +63,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.facebook:
                 share = new Intent(Intent.ACTION_SEND);
-                share.setType("image/jpeg");
+                share.setType("image/*");
                 share.putExtra(Intent.EXTRA_STREAM, imageUri);
                 share.setPackage("com.facebook.katana");//package name of the app
 
                 try {
-                    //startActivity(share);
+
                     startActivity(Intent.createChooser(share, "Share Image with Facebook"));
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(this, "Facebook have not been installed.", Toast.LENGTH_SHORT).show();
@@ -78,12 +78,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.whatsapp:
                 share = new Intent(Intent.ACTION_SEND);
-                share.setType("image/jpeg");
+                share.setType("image/*");
                 share.putExtra(Intent.EXTRA_STREAM, imageUri);
                 share.setPackage("com.whatsapp");//package name of the app
 
                 try {
-                    //startActivity(share);
+
                     startActivity(Intent.createChooser(share, "Share Image with WhatsApp"));
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(this, "Whatsapp have not been installed.", Toast.LENGTH_SHORT).show();
@@ -93,12 +93,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.twitter:
                 share = new Intent(Intent.ACTION_SEND);
-                share.setType("image/jpeg");
+                share.setType("image/*");
                 share.putExtra(Intent.EXTRA_STREAM, imageUri);
                 share.setPackage("com.twitter.android");//package name of the app
 
                 try {
-                   // startActivity(share);
+
                     startActivity(Intent.createChooser(share, "Share Image with Twitter"));
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(this, "Twitter have not been installed.", Toast.LENGTH_SHORT).show();
@@ -107,12 +107,12 @@ public class ShareActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.instagram:
                 share = new Intent(Intent.ACTION_SEND);
-                share.setType("image/jpeg");
+                share.setType("image/*");
                 share.putExtra(Intent.EXTRA_STREAM, imageUri);
                 share.setPackage("com.instagram.android");//package name of the app
 
                 try {
-                    //startActivity(share);
+
                     startActivity(Intent.createChooser(share, "Share Image with Instagram"));
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(this, "Instagram have not been installed.", Toast.LENGTH_SHORT).show();
@@ -125,7 +125,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
                     Intent shareIntent = new Intent();
                     shareIntent.setAction(Intent.ACTION_SEND);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                    shareIntent.setType("image/jpeg");
+                    shareIntent.setType("image/*");
                     startActivity(Intent.createChooser(shareIntent, "Share Image to Other..."));
                 } catch (Exception e) {
 
@@ -146,11 +146,16 @@ public class ShareActivity extends Activity implements View.OnClickListener {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            finish();
+                            Intentto();
                         }
 
                     })
-                    .setNegativeButton("No", null)
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
                     .show();
         } catch (Exception e) {
 
@@ -174,10 +179,7 @@ public class ShareActivity extends Activity implements View.OnClickListener {
 
     public boolean hasInternet() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED) {
-            return true;
-        }
-        return false;
+        return connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED;
     }
 
     @Override
@@ -188,6 +190,3 @@ public class ShareActivity extends Activity implements View.OnClickListener {
     }
 
 }
-/*case R.id.exit:
-                exitto();
-                break;*/

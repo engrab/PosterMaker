@@ -76,11 +76,11 @@ public class FragmentColor extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.getImage = (OnGetImageOnTouch) getActivity();
         View view = inflater.inflate(R.layout.fragment_color, container, false);
-        this.img_color = (ImageView) view.findViewById(R.id.img_color);
+        this.img_color = view.findViewById(R.id.img_color);
         DisplayMetrics dimension = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dimension);
         this.screenWidth = (float) dimension.widthPixels;
-        ((ImageButton) view.findViewById(R.id.img_colorPicker)).setOnClickListener(new listener1());
+        view.findViewById(R.id.img_colorPicker).setOnClickListener(new listener1());
         this.img_color.setOnClickListener(new color_click());
         ((TextView) view.findViewById(R.id.textH)).setTypeface(Constants.getHeaderTypeface(getActivity()));
         ((TextView) view.findViewById(R.id.txtGal)).setTypeface(Constants.getTextTypeface(getActivity()));

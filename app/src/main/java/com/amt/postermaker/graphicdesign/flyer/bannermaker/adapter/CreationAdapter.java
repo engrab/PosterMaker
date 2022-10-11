@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -83,8 +84,8 @@ public class CreationAdapter extends BaseAdapter {
                     dialog.setContentView(R.layout.layout_fullscreen_image);
                     dialog.getWindow().setLayout(width, height);
                     dialog.setCanceledOnTouchOutside(true);
-                    ImageView imgDelete = (ImageView) dialog.findViewById(R.id.imgDelete);
-                    ImageView imgShare = (ImageView) dialog.findViewById(R.id.imgShare);
+                    Button imgDelete = (Button) dialog.findViewById(R.id.imgDelete);
+                    Button imgShare = (Button) dialog.findViewById(R.id.imgShare);
 
                     ((ImageView) dialog.findViewById(R.id.imgDisplay)).setImageURI(Uri.parse((String) MyCreationActivity.IMAGEALLARY.get(position)));
 

@@ -59,8 +59,9 @@
             android:layout_height="48dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:backgroundTint="@color/colorPrimary"
-            app:textColor="@color/white" />
+            app:textColor="@color/white"
+            app:accentColor="@color/white"
+            app:primaryColor="@color/colorPrimary" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"

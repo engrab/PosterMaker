@@ -112,6 +112,6 @@ public class TemplatesActivity extends AppCompatActivity implements MaterialTabL
     }
 
     public void onBackPressed() {
-        super.onBackPressed();
+        TemplatesActivity.super.onBackPressed();
     }
 }

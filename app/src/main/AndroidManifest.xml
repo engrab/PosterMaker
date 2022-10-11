@@ -10,6 +10,35 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <queries>
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <package android:name="com.instagram.android" />
+        <package android:name="com.instagram.lite" />
+        <package android:name="com.facebook.katana" />
+        <package android:name="com.facebook.orca" />
+        <package android:name="com.facebook.lite" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="org.thunderdog.challegram" />
+        <package android:name="com.viber.voip" />
+        <package android:name="org.thoughtcrime.securesms" />
+        <package android:name="com.tencent.mm" />
+        <package android:name="kik.android" />
+        <package android:name="com.unearby.sayhi" />
+        <package android:name="jp.naver.line.android" />
+        <package android:name="com.imo.android.imoim" />
+        <package android:name="com.discord" />
+        <package android:name="com.myyearbook.m" />
+        <package android:name="com.snapchat.android" />
+        <package android:name="com.skype.raider" />
+        <package android:name="com.twitter.android" />
+    </queries>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
+    <queries>
         <!-- Camera -->
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -93,10 +122,7 @@
         <activity
             android:name=".ui.activities.ShareActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.SavedHistoryActivity"
-            android:screenOrientation="portrait"
-             />
+
         <activity
             android:name=".ui.activities.MyCreationActivity"
             android:screenOrientation="portrait" />
